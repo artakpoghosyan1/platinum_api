@@ -1,11 +1,17 @@
-import { FC } from "react";
+import { Dispatch, FC, SetStateAction } from "react";
 
-interface Props {}
+interface Props {
+  setCurrentCarId: Dispatch<SetStateAction<number | null>>;
+  id: number;
+}
 
-export const TableActions: FC<Props> = () => {
+export const TableActions: FC<Props> = ({ setCurrentCarId, id }) => {
   return (
     <div className="flex justify-end">
-      <button className="mr-4 hover:text-primary">
+      <button
+        className="mr-4 hover:text-primary"
+        onClick={() => setCurrentCarId(id)}
+      >
         <svg
           className="fill-current"
           xmlns="http://www.w3.org/2000/svg"

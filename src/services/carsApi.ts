@@ -22,11 +22,10 @@ async function addCar(formData: FormData): Promise<any> {
   return response.json();
 }
 
-export const useGetCars = (initialCars: ServerCar[]) => {
+export const useGetCars = () => {
   return useQuery({
     queryKey: ["cars"],
     queryFn: getCars,
-    initialData: initialCars,
   });
 };
 

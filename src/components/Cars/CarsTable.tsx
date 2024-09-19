@@ -1,12 +1,12 @@
 "use client";
 
-import { FC, ReactNode } from "react";
+import { Dispatch, FC, ReactNode, SetStateAction } from "react";
 import { Car, ServerCar } from "@/models/cars";
-import { useGetCars } from "@/services/carsApi";
 import { TableActions } from "@/components/Cars/TableActions";
 
 interface Props {
-  initialCars: ServerCar[];
+  cars: ServerCar[];
+  setCurrentCarId: Dispatch<SetStateAction<number | null>>;
 }
 
 const COLUMNS: { id: string; label: string }[] = [
@@ -20,12 +20,7 @@ const COLUMNS: { id: string; label: string }[] = [
   { id: "actions", label: "Actions" },
 ];
 
-const CarsTable: FC<Props> = ({ initialCars }) => {
-  const { data: cars, isLoading, isError } = useGetCars(initialCars);
-
-  if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div>Error loading cars</div>;
-
+const CarsTable: FC<Props> = ({ cars, setCurrentCarId }) => {
   return (
     <div className="h-full rounded-sm border border-stroke bg-white px-5 py-6 shadow-default dark:border-strokedark dark:bg-boxdark">
       <div className="h-full max-w-full overflow-x-auto">
@@ -64,7 +59,12 @@ const CarsTable: FC<Props> = ({ initialCars }) => {
 
                         {car[col.id as keyof Car] as ReactNode}
 
-                        {col.id === "actions" && <TableActions />}
+                        {col.id === "actions" && (
+                          <TableActions
+                            id={car.id!}
+                            setCurrentCarId={setCurrentCarId}
+                          />
+                        )}
                       </>
                     )}
                   </td>

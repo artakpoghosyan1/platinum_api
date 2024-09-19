@@ -1,6 +1,6 @@
 "use client";
 
-import { FC } from "react";
+import { FC, useMemo } from "react";
 import * as Yup from "yup";
 import { ErrorMessage, Field, Formik, Form } from "formik";
 import { Car } from "@/models/cars";
@@ -9,6 +9,7 @@ import { useAddCar } from "@/services/carsApi";
 
 interface Props {
   car: Car | null;
+  onCloseModal: () => void;
 }
 
 const validationSchema = Yup.object().shape({
@@ -25,26 +26,27 @@ const validationSchema = Yup.object().shape({
   bodyType: Yup.string().required("Body type is required"),
 });
 
-const EditForm: FC<Props> = ({ car }) => {
+const EditForm: FC<Props> = ({ car, onCloseModal }) => {
   const addCarMutation = useAddCar();
 
-  const initialValues: Car = {
-    make: car?.make || "",
-    model: car?.model || "",
-    year: car?.year || 0,
-    vinCode: car?.vinCode || "",
-    price: car?.price || 0,
-    description: car?.description || "",
-    color: car?.color || "",
-    images: car?.images || [],
-    mileage: car?.mileage || 0,
-    engine: car?.engine || "",
-    bodyType: car?.bodyType || "",
-  };
+  const initialValues: Car = useMemo(
+    () => ({
+      make: car?.make || "",
+      model: car?.model || "",
+      year: car?.year || 0,
+      vinCode: car?.vinCode || "",
+      price: car?.price || 0,
+      description: car?.description || "",
+      color: car?.color || "",
+      images: car?.images || [],
+      mileage: car?.mileage || 0,
+      engine: car?.engine || "",
+      bodyType: car?.bodyType || "",
+    }),
+    [car],
+  );
 
   const handleSubmit = async (values: Car) => {
-    console.log("values", values);
-
     try {
       const formData = new FormData();
 
@@ -67,7 +69,7 @@ const EditForm: FC<Props> = ({ car }) => {
 
       addCarMutation.mutate(formData);
 
-      // Handle success (e.g., close modal, show success message)
+      onCloseModal();
       console.log("Car added successfully");
     } catch (error) {
       console.error("An error occurred:", error);
@@ -84,6 +86,7 @@ const EditForm: FC<Props> = ({ car }) => {
         initialValues={initialValues}
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
+        enableReinitialize
       >
         {({ setFieldValue }) => {
           return (
@@ -233,12 +236,7 @@ const EditForm: FC<Props> = ({ car }) => {
               <button
                 type="button"
                 className="btn btn-error"
-                onClick={() =>
-                  document
-                    .getElementById("my_modal_1")
-                    ?.closest("dialog")
-                    ?.close()
-                }
+                onClick={onCloseModal}
               >
                 Cancel
               </button>

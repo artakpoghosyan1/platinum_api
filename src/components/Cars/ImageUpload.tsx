@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 interface ImageUploadProps {
   images: File[];
@@ -7,6 +7,13 @@ interface ImageUploadProps {
 
 const ImageUpload: React.FC<ImageUploadProps> = ({ images, setImages }) => {
   const [previewImages, setPreviewImages] = useState<string[]>([]);
+
+  useEffect(() => {
+    const updatedPreviews = images.map((file) => URL.createObjectURL(file));
+
+    setPreviewImages(updatedPreviews);
+    setImages(images);
+  }, [images]);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = Array.from(e.target.files || []);
