@@ -1,7 +1,7 @@
-import { Car } from "@/models/cars";
+import { ServerCar } from "@/models/cars";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-async function getCars(): Promise<Car[]> {
+async function getCars(): Promise<ServerCar[]> {
   const res = await fetch("/cars");
   if (!res.ok) {
     throw new Error("Failed to fetch cars");
@@ -22,7 +22,7 @@ async function addCar(formData: FormData): Promise<any> {
   return response.json();
 }
 
-export const useGetCars = (initialCars: Car[]) => {
+export const useGetCars = (initialCars: ServerCar[]) => {
   return useQuery({
     queryKey: ["cars"],
     queryFn: getCars,

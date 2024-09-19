@@ -216,7 +216,7 @@ const EditForm: FC<Props> = ({ car }) => {
                 <label className="label">Upload Images</label>
                 <ImageUpload
                   images={initialValues.images}
-                  setImages={(images: string[]) =>
+                  setImages={(images: File[]) =>
                     setFieldValue("images", images)
                   }
                 />
@@ -227,7 +227,7 @@ const EditForm: FC<Props> = ({ car }) => {
                 />
               </div>
 
-              <button type="submit" className="btn btn-primary">
+              <button type="submit" className="btn btn-primary mr-4">
                 Save
               </button>
               <button

@@ -49,6 +49,7 @@ export async function POST(request: Request) {
 
       const filename = `${Date.now()}-${image.name}`;
       const filepath = path.join(uploadDir, filename);
+      const url = `/uploads/${filename}`;
 
       fs.writeFileSync(filepath, buffer);
 
@@ -57,6 +58,7 @@ export async function POST(request: Request) {
         data: {
           carId: newCar.id,
           filename,
+          url,
         },
       });
     }
@@ -82,15 +84,7 @@ export async function GET() {
       },
     });
 
-    const carsWithImageUrls = cars.map((car) => ({
-      ...car,
-      images: car.images.map((image) => ({
-        ...image,
-        url: `/uploads/${image.filename}`,
-      })),
-    }));
-
-    return NextResponse.json(carsWithImageUrls);
+    return NextResponse.json(cars);
   } catch (error) {
     console.error("Error fetching cars:", error);
     return NextResponse.json({ error: "Error fetching cars" }, { status: 500 });

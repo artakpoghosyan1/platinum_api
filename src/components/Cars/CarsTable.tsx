@@ -1,18 +1,18 @@
 "use client";
 
 import { FC, ReactNode } from "react";
-import { Car } from "@/models/cars";
+import { Car, ServerCar } from "@/models/cars";
 import { useGetCars } from "@/services/carsApi";
+import { TableActions } from "@/components/Cars/TableActions";
 
 interface Props {
-  initialCars: Car[];
+  initialCars: ServerCar[];
 }
 
 const COLUMNS: { id: string; label: string }[] = [
-  { id: "make", label: "Make" },
-  { id: "model", label: "Model" },
+  { id: "name", label: "Name" },
   { id: "year", label: "Year" },
-  { id: "mileAge", label: "MileAge" },
+  { id: "mileage", label: "Mile age" },
   { id: "color", label: "Color" },
   { id: "vinCode", label: "Vin Code" },
   { id: "engine", label: "Engine" },
@@ -35,7 +35,7 @@ const CarsTable: FC<Props> = ({ initialCars }) => {
               {COLUMNS.map((col, index) => (
                 <th
                   key={col.id}
-                  className={`${index === COLUMNS.length - 1 && "flex justify-end"} px-4 py-4 font-medium text-black dark:text-white xl:pl-11`}
+                  className={`${index === COLUMNS.length - 1 && "flex justify-end"} p-4 font-medium text-black dark:text-white`}
                 >
                   {col.label}
                 </th>
@@ -48,18 +48,23 @@ const CarsTable: FC<Props> = ({ initialCars }) => {
                 {COLUMNS.map((col, index) => (
                   <td
                     key={`${col.id}-${index}`}
-                    className="border-b border-[#eee] px-4 py-5 pl-9 dark:border-strokedark xl:pl-11"
+                    className="border-b border-[#eee] p-4 dark:border-strokedark"
                   >
                     {col.id !== "images" && (
                       <>
+                        {col.id === "name" && `${car.make} ${car.model}`}
+
                         {index === 0 && car.images && (
                           <img
                             src={car.images[0].url}
                             alt={car.images[0].filename}
-                            className="max-w-14"
+                            className="mt-3 max-w-14"
                           />
                         )}
+
                         {car[col.id as keyof Car] as ReactNode}
+
+                        {col.id === "actions" && <TableActions />}
                       </>
                     )}
                   </td>
