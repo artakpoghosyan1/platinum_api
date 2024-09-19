@@ -5,6 +5,9 @@
 @tailwind utilities;
 
 @layer base {
+    html, body {
+        @apply h-full;
+    }
     body {
         @apply relative z-1 bg-whiten font-satoshi text-base font-normal text-body;
     }

@@ -1,0 +1,253 @@
+"use client";
+
+import { FC } from "react";
+import * as Yup from "yup";
+import { ErrorMessage, Field, Formik, Form } from "formik";
+import { Car } from "@/models/cars";
+import ImageUpload from "@/components/Cars/ImageUpload";
+import { useAddCar } from "@/services/carsApi";
+
+interface Props {
+  car: Car | null;
+}
+
+const validationSchema = Yup.object().shape({
+  make: Yup.string().required("Make is required"),
+  model: Yup.string().required("Model is required"),
+  year: Yup.number().required("Year is required").positive().integer(),
+  vinCode: Yup.string().required("Vin code is required"),
+  price: Yup.number().required("Price is required").positive(),
+  description: Yup.string().required("Description is required"),
+  color: Yup.string().required("Color is required"),
+  mileage: Yup.number().required("Mile age is required").positive().integer(),
+  images: Yup.array(),
+  engine: Yup.string().required("Engine is required"),
+  bodyType: Yup.string().required("Body type is required"),
+});
+
+const EditForm: FC<Props> = ({ car }) => {
+  const addCarMutation = useAddCar();
+
+  const initialValues: Car = {
+    make: car?.make || "",
+    model: car?.model || "",
+    year: car?.year || 0,
+    vinCode: car?.vinCode || "",
+    price: car?.price || 0,
+    description: car?.description || "",
+    color: car?.color || "",
+    images: car?.images || [],
+    mileage: car?.mileage || 0,
+    engine: car?.engine || "",
+    bodyType: car?.bodyType || "",
+  };
+
+  const handleSubmit = async (values: Car) => {
+    console.log("values", values);
+
+    try {
+      const formData = new FormData();
+
+      // Append form fields to formData
+      formData.append("make", values.make);
+      formData.append("model", values.model);
+      formData.append("year", values.year.toString());
+      formData.append("vinCode", values.vinCode ?? "");
+      formData.append("price", values.price.toString());
+      formData.append("description", values.description ?? "");
+      formData.append("color", values.color);
+      formData.append("mileage", values.mileage.toString());
+      formData.append("engine", values.engine.toString());
+      formData.append("bodyType", values.bodyType.toString());
+
+      // Append images to formData
+      values.images.forEach((file: File) => {
+        formData.append("images", file);
+      });
+
+      addCarMutation.mutate(formData);
+
+      // Handle success (e.g., close modal, show success message)
+      console.log("Car added successfully");
+    } catch (error) {
+      console.error("An error occurred:", error);
+    }
+  };
+
+  return (
+    <>
+      <h2 className="mb-4 text-2xl font-bold">
+        {car ? "Edit Car" : "Create New Car"}
+      </h2>
+
+      <Formik
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        onSubmit={handleSubmit}
+      >
+        {({ setFieldValue }) => {
+          return (
+            <Form>
+              <div className="form-control mb-4">
+                <label className="label">Make</label>
+                <Field name="make" className="input input-bordered" />
+                <ErrorMessage
+                  name="make"
+                  component="div"
+                  className="text-red"
+                />
+              </div>
+
+              <div className="form-control mb-4">
+                <label className="label">Model</label>
+                <Field name="model" className="input input-bordered" />
+                <ErrorMessage
+                  name="model"
+                  component="div"
+                  className="text-red"
+                />
+              </div>
+
+              <div className="form-control mb-4">
+                <label className="label">Year</label>
+                <Field
+                  name="year"
+                  type="number"
+                  className="input input-bordered"
+                />
+                <ErrorMessage
+                  name="year"
+                  component="div"
+                  className="text-red"
+                />
+              </div>
+
+              <div className="form-control mb-4">
+                <label className="label">Vin code</label>
+                <Field name="vinCode" className="input input-bordered" />
+                <ErrorMessage
+                  name="vinCode"
+                  component="div"
+                  className="text-red"
+                />
+              </div>
+
+              <div className="form-control mb-4">
+                <label className="label">Price</label>
+                <Field
+                  name="price"
+                  type="number"
+                  className="input input-bordered"
+                />
+                <ErrorMessage
+                  name="price"
+                  component="div"
+                  className="text-red"
+                />
+              </div>
+
+              <div className="form-control mb-4">
+                <label className="label">Description</label>
+                <Field
+                  name="description"
+                  as="textarea"
+                  className="input input-bordered"
+                />
+                <ErrorMessage
+                  name="description"
+                  component="div"
+                  className="text-red"
+                />
+              </div>
+
+              <div className="form-control mb-4">
+                <label className="label">Color</label>
+                <Field name="color" className="input input-bordered" />
+                <ErrorMessage
+                  name="color"
+                  component="div"
+                  className="text-red"
+                />
+              </div>
+
+              <div className="form-control mb-4">
+                <label className="label">Mile age</label>
+                <Field
+                  name="mileage"
+                  type="number"
+                  className="input input-bordered"
+                />
+                <ErrorMessage
+                  name="mileage"
+                  component="div"
+                  className="text-red"
+                />
+              </div>
+
+              <div className="form-control mb-4">
+                <label className="label">Engine</label>
+                <Field
+                  name="engine"
+                  type="text"
+                  className="input input-bordered"
+                />
+                <ErrorMessage
+                  name="engine"
+                  component="div"
+                  className="text-red"
+                />
+              </div>
+
+              <div className="form-control mb-4">
+                <label className="label">Body type</label>
+                <Field
+                  name="bodyType"
+                  type="text"
+                  className="input input-bordered"
+                />
+                <ErrorMessage
+                  name="bodyType"
+                  component="div"
+                  className="text-red"
+                />
+              </div>
+
+              <div className="form-control mb-4">
+                <label className="label">Upload Images</label>
+                <ImageUpload
+                  images={initialValues.images}
+                  setImages={(images: string[]) =>
+                    setFieldValue("images", images)
+                  }
+                />
+                <ErrorMessage
+                  name="images"
+                  component="div"
+                  className="text-red"
+                />
+              </div>
+
+              <button type="submit" className="btn btn-primary">
+                Save
+              </button>
+              <button
+                type="button"
+                className="btn btn-error"
+                onClick={() =>
+                  document
+                    .getElementById("my_modal_1")
+                    ?.closest("dialog")
+                    ?.close()
+                }
+              >
+                Cancel
+              </button>
+            </Form>
+          );
+        }}
+      </Formik>
+    </>
+  );
+};
+
+export default EditForm;
