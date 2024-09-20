@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
-import fs from "fs";
-import path from "path";
 import prisma from "@/lib/prisma";
+import { uploadImages } from "@/app/cars/uploadImages";
 
 export const runtime = "nodejs";
 
@@ -37,31 +36,8 @@ export async function POST(request: Request) {
       },
     });
 
-    // Handle images
-    const uploadDir = path.join(process.cwd(), "/public/uploads");
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true });
-    }
-
-    for (const image of images) {
-      const arrayBuffer = await image.arrayBuffer();
-      const buffer = Buffer.from(arrayBuffer);
-
-      const filename = `${Date.now()}-${image.name}`;
-      const filepath = path.join(uploadDir, filename);
-      const url = `/uploads/${filename}`;
-
-      fs.writeFileSync(filepath, buffer);
-
-      // Save image info to database
-      await prisma.images.create({
-        data: {
-          carId: newCar.id,
-          filename,
-          url,
-        },
-      });
-    }
+    // Process and upload images
+    await uploadImages(images, newCar.id);
 
     return NextResponse.json({
       message: "Car added successfully",

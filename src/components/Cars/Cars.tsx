@@ -26,12 +26,14 @@ const Cars: FC = () => {
   useEffect(() => {
     const fetchImages = async (car: ServerCar) => {
       const files = await Promise.all(
-        car.images.map(async ({ url }) => {
+        car.images.map(async ({ url, id }) => {
           const response = await fetch(url);
           const blob = await response.blob();
-          return new File([blob], url.split("/").pop() || "image.jpg", {
+          const file = new File([blob], url.split("/").pop() || "image.jpg", {
             type: blob.type,
           });
+          (file as any).id = id; // Attach the id to the file object
+          return file;
         }),
       );
       return { ...car, images: files };
@@ -40,7 +42,9 @@ const Cars: FC = () => {
     if (currentCarId) {
       const currentCar = cars?.find((car) => car.id === currentCarId) ?? null;
       if (currentCar) {
-        fetchImages(currentCar).then(setEditableCar);
+        fetchImages(currentCar).then((carData) => {
+          setEditableCar(carData);
+        });
 
         openModal();
       }

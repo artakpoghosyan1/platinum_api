@@ -49,7 +49,7 @@ const CarsTable: FC<Props> = ({ cars, setCurrentCarId }) => {
                       <>
                         {col.id === "name" && `${car.make} ${car.model}`}
 
-                        {index === 0 && car.images && (
+                        {index === 0 && car.images.length > 0 && (
                           <img
                             src={car.images[0].url}
                             alt={car.images[0].filename}

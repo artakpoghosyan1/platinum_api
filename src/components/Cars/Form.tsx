@@ -5,7 +5,7 @@ import * as Yup from "yup";
 import { ErrorMessage, Field, Formik, Form } from "formik";
 import { Car } from "@/models/cars";
 import ImageUpload from "@/components/Cars/ImageUpload";
-import { useAddCar } from "@/services/carsApi";
+import { useAddCar, useEditCar } from "@/services/carsApi";
 
 interface Props {
   car: Car | null;
@@ -28,6 +28,7 @@ const validationSchema = Yup.object().shape({
 
 const EditForm: FC<Props> = ({ car, onCloseModal }) => {
   const addCarMutation = useAddCar();
+  const editCarMutation = useEditCar();
 
   const initialValues: Car = useMemo(
     () => ({
@@ -67,10 +68,13 @@ const EditForm: FC<Props> = ({ car, onCloseModal }) => {
         formData.append("images", file);
       });
 
-      addCarMutation.mutate(formData);
-
-      onCloseModal();
-      console.log("Car added successfully");
+      if (car?.id) {
+        editCarMutation.mutate({ id: car.id, formData });
+      } else {
+        addCarMutation.mutate(formData);
+      }
+      onCloseModal(); // Close modal after adding or editing
+      console.log("Operation completed successfully");
     } catch (error) {
       console.error("An error occurred:", error);
     }
