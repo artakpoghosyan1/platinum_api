@@ -10,8 +10,6 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ images, setImages }) => {
   const [previewImages, setPreviewImages] = useState<
     { url: string; id?: number }[]
   >([]);
-  console.log("images", images);
-  console.log("previewImages", previewImages);
   const deleteImageMutation = useDeleteImage();
 
   useEffect(() => {
@@ -60,18 +58,18 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ images, setImages }) => {
   };
 
   return (
-    <div className="flex flex-col space-y-2">
+    <div className="flex flex-col">
       <input
         type="file"
         multiple
         accept="image/*"
-        className="file-input w-full max-w-xs"
+        className="file-input mb-6 w-full max-w-xs"
         onChange={handleImageChange}
       />
 
-      <div className="flex space-x-2">
+      <div className="flex space-x-4">
         {previewImages.map(({ url, id }, index) => (
-          <>
+          <div className="relative">
             <img
               key={index}
               src={url}
@@ -79,12 +77,27 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ images, setImages }) => {
               className="h-16 w-16 object-cover"
             />
             <button
-              className="delete-button"
+              className="dark:bg-gray-800 border-gray-800 absolute -right-3 -top-3 rounded-full border bg-white p-1"
               onClick={(e) => handleDeleteImage(e, index, id)}
             >
-              🗑
+              <svg
+                className="text-gray-800 dark:text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                width="17"
+                height="17"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M6 18 17.94 6M18 18 6.06 6"
+                />
+              </svg>
             </button>
-          </>
+          </div>
         ))}
       </div>
     </div>

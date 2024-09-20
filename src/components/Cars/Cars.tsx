@@ -65,7 +65,7 @@ const Cars: FC = () => {
         Add new car
       </button>
 
-      <Modal>
+      <Modal onClose={closeModal}>
         <EditForm car={editableCar} onCloseModal={closeModal} />
       </Modal>
 

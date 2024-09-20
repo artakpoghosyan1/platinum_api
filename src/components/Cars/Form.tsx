@@ -95,131 +95,140 @@ const EditForm: FC<Props> = ({ car, onCloseModal }) => {
         {({ setFieldValue }) => {
           return (
             <Form>
-              <div className="form-control mb-4">
-                <label className="label">Make</label>
-                <Field name="make" className="input input-bordered" />
-                <ErrorMessage
-                  name="make"
-                  component="div"
-                  className="text-red"
-                />
+              <div className="flex gap-x-10">
+                <div className="form-control mb-4 flex-1">
+                  <label className="label">Make</label>
+                  <Field name="make" className="input input-bordered" />
+                  <ErrorMessage
+                    name="make"
+                    component="div"
+                    className="text-red"
+                  />
+                </div>
+
+                <div className="form-control mb-4 flex-1">
+                  <label className="label">Model</label>
+                  <Field name="model" className="input input-bordered" />
+                  <ErrorMessage
+                    name="model"
+                    component="div"
+                    className="text-red"
+                  />
+                </div>
               </div>
 
-              <div className="form-control mb-4">
-                <label className="label">Model</label>
-                <Field name="model" className="input input-bordered" />
-                <ErrorMessage
-                  name="model"
-                  component="div"
-                  className="text-red"
-                />
+              <div className="flex gap-x-10">
+                <div className="form-control mb-4 flex-1">
+                  <label className="label">Year</label>
+                  <Field
+                    name="year"
+                    type="number"
+                    className="input input-bordered"
+                  />
+                  <ErrorMessage
+                    name="year"
+                    component="div"
+                    className="text-red"
+                  />
+                </div>
+
+                <div className="form-control mb-4 flex-1">
+                  <label className="label">Vin code</label>
+                  <Field name="vinCode" className="input input-bordered" />
+                  <ErrorMessage
+                    name="vinCode"
+                    component="div"
+                    className="text-red"
+                  />
+                </div>
               </div>
 
-              <div className="form-control mb-4">
-                <label className="label">Year</label>
-                <Field
-                  name="year"
-                  type="number"
-                  className="input input-bordered"
-                />
-                <ErrorMessage
-                  name="year"
-                  component="div"
-                  className="text-red"
-                />
+              <div className="flex gap-x-10">
+                <div className="form-control mb-4 flex-1">
+                  <label className="label">Price</label>
+                  <Field
+                    name="price"
+                    type="number"
+                    className="input input-bordered"
+                  />
+                  <ErrorMessage
+                    name="price"
+                    component="div"
+                    className="text-red"
+                  />
+                </div>
+
+                <div className="form-control mb-4 flex-1">
+                  <label className="label">Mile age</label>
+                  <Field
+                    name="mileage"
+                    type="number"
+                    className="input input-bordered"
+                  />
+                  <ErrorMessage
+                    name="mileage"
+                    component="div"
+                    className="text-red"
+                  />
+                </div>
               </div>
 
-              <div className="form-control mb-4">
-                <label className="label">Vin code</label>
-                <Field name="vinCode" className="input input-bordered" />
-                <ErrorMessage
-                  name="vinCode"
-                  component="div"
-                  className="text-red"
-                />
+              <div className="flex gap-x-10">
+                <div className="form-control mb-4 flex-1">
+                  <label className="label">Engine</label>
+                  <Field
+                    name="engine"
+                    type="text"
+                    className="input input-bordered"
+                  />
+                  <ErrorMessage
+                    name="engine"
+                    component="div"
+                    className="text-red"
+                  />
+                </div>
+
+                <div className="form-control mb-4 flex-1">
+                  <label className="label">Body type</label>
+                  <Field
+                    name="bodyType"
+                    type="text"
+                    className="input input-bordered"
+                  />
+                  <ErrorMessage
+                    name="bodyType"
+                    component="div"
+                    className="text-red"
+                  />
+                </div>
+              </div>
+              <div className="flex gap-x-10">
+                <div className="form-control mb-4 flex-1">
+                  <label className="label">Color</label>
+                  <Field name="color" className="input input-bordered" />
+                  <ErrorMessage
+                    name="color"
+                    component="div"
+                    className="text-red"
+                  />
+                </div>
+
+                <div className="form-control mb-4 flex-1">
+                  <label className="label">Description</label>
+                  <Field
+                    name="description"
+                    as="textarea"
+                    className="input input-bordered"
+                  />
+                  <ErrorMessage
+                    name="description"
+                    component="div"
+                    className="text-red"
+                  />
+                </div>
               </div>
 
-              <div className="form-control mb-4">
-                <label className="label">Price</label>
-                <Field
-                  name="price"
-                  type="number"
-                  className="input input-bordered"
-                />
-                <ErrorMessage
-                  name="price"
-                  component="div"
-                  className="text-red"
-                />
-              </div>
-
-              <div className="form-control mb-4">
-                <label className="label">Description</label>
-                <Field
-                  name="description"
-                  as="textarea"
-                  className="input input-bordered"
-                />
-                <ErrorMessage
-                  name="description"
-                  component="div"
-                  className="text-red"
-                />
-              </div>
-
-              <div className="form-control mb-4">
-                <label className="label">Color</label>
-                <Field name="color" className="input input-bordered" />
-                <ErrorMessage
-                  name="color"
-                  component="div"
-                  className="text-red"
-                />
-              </div>
-
-              <div className="form-control mb-4">
-                <label className="label">Mile age</label>
-                <Field
-                  name="mileage"
-                  type="number"
-                  className="input input-bordered"
-                />
-                <ErrorMessage
-                  name="mileage"
-                  component="div"
-                  className="text-red"
-                />
-              </div>
-
-              <div className="form-control mb-4">
-                <label className="label">Engine</label>
-                <Field
-                  name="engine"
-                  type="text"
-                  className="input input-bordered"
-                />
-                <ErrorMessage
-                  name="engine"
-                  component="div"
-                  className="text-red"
-                />
-              </div>
-
-              <div className="form-control mb-4">
-                <label className="label">Body type</label>
-                <Field
-                  name="bodyType"
-                  type="text"
-                  className="input input-bordered"
-                />
-                <ErrorMessage
-                  name="bodyType"
-                  component="div"
-                  className="text-red"
-                />
-              </div>
-
-              <div className="form-control mb-4">
+              <div className="form-control mb-4 flex-1">
                 <label className="label">Upload Images</label>
                 <ImageUpload
                   images={initialValues.images}
@@ -234,16 +243,18 @@ const EditForm: FC<Props> = ({ car, onCloseModal }) => {
                 />
               </div>
 
-              <button type="submit" className="btn btn-primary mr-4">
-                Save
-              </button>
-              <button
-                type="button"
-                className="btn btn-error"
-                onClick={onCloseModal}
-              >
-                Cancel
-              </button>
+              <div className="mt-10">
+                <button type="submit" className="btn btn-primary mr-4">
+                  Save
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-error"
+                  onClick={onCloseModal}
+                >
+                  Cancel
+                </button>
+              </div>
             </Form>
           );
         }}
