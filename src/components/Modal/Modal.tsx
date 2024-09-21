@@ -1,6 +1,6 @@
 "use client";
 
-import { FC, ReactNode, RefObject, useRef } from "react";
+import { FC, ReactNode, RefObject, useEffect, useRef } from "react";
 
 interface Props {
   children: ReactNode;
@@ -9,6 +9,20 @@ interface Props {
 
 export const Modal: FC<Props> = ({ children, onClose }) => {
   const modalRef: RefObject<HTMLDialogElement> = useRef(null);
+
+  useEffect(() => {
+    const handleEscKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape" && modalRef.current?.open) {
+        modalRef.current.close();
+        onClose();
+      }
+    };
+
+    window.addEventListener("keydown", handleEscKey);
+    return () => {
+      window.removeEventListener("keydown", handleEscKey);
+    };
+  }, []);
 
   return (
     <dialog id="my_modal_1" className="modal" ref={modalRef}>

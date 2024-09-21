@@ -12,6 +12,7 @@ interface Props {
 const COLUMNS: { id: string; label: string }[] = [
   { id: "name", label: "Name" },
   { id: "year", label: "Year" },
+  { id: "price", label: "Price" },
   { id: "mileage", label: "Mile age" },
   { id: "color", label: "Color" },
   { id: "vinCode", label: "Vin Code" },
