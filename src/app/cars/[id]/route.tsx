@@ -93,34 +93,46 @@ export async function PUT(
   }
 }
 
+// DELETE a car and all associated images
 export async function DELETE(
   req: NextRequest,
   { params }: { params: { id: string } },
 ) {
-  const imageId = Number(params.id);
+  const carId = Number(params.id);
 
   try {
-    const image = await prisma.images.findUnique({
-      where: { id: imageId },
+    // Fetch all images associated with the car
+    const images = await prisma.images.findMany({
+      where: { carId },
     });
 
-    if (!image) {
-      return NextResponse.json({ error: "Image not found" }, { status: 404 });
+    // Delete each image from the file system and the database
+    for (const image of images) {
+      const filePath = path.join(
+        process.cwd(),
+        "public/uploads",
+        image.filename,
+      );
+      await fs.unlink(filePath); // Remove image from the file system
+
+      // Delete the image from the database
+      await prisma.images.delete({
+        where: { id: image.id },
+      });
     }
 
-    await prisma.images.delete({
-      where: { id: imageId },
+    // Finally, delete the car from the database
+    await prisma.cars.delete({
+      where: { id: carId },
     });
 
-    const filePath = path.join(process.cwd(), "public/uploads", image.filename);
-
-    await fs.unlink(filePath);
-
-    return NextResponse.json({ message: "Image deleted successfully" });
+    return NextResponse.json({
+      message: "Car and associated images deleted successfully",
+    });
   } catch (error) {
-    console.error("Error deleting image:", error);
+    console.error("Error deleting car and images:", error);
     return NextResponse.json(
-      { error: "Failed to delete image" },
+      { error: "Failed to delete car" },
       { status: 500 },
     );
   }

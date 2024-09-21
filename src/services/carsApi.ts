@@ -23,12 +23,24 @@ async function addCar(formData: FormData): Promise<any> {
 }
 
 const deleteImage = async (imageId: number) => {
-  const response = await fetch(`/cars/${imageId}`, {
+  const response = await fetch(`/images/${imageId}`, {
     method: "DELETE",
   });
 
   if (!response.ok) {
     throw new Error("Failed to delete image");
+  }
+
+  return response.json();
+};
+
+const deleteCar = async (carId: number) => {
+  const response = await fetch(`/cars/${carId}`, {
+    method: "DELETE",
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to delete car");
   }
 
   return response.json();
@@ -93,6 +105,22 @@ export const useDeleteImage = () => {
     },
     onError: (error) => {
       console.error("Error deleting image:", error);
+    },
+  });
+};
+
+export const useDeleteCar = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: deleteCar,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["cars"],
+      });
+    },
+    onError: (error) => {
+      console.error("Error deleting car:", error);
     },
   });
 };
