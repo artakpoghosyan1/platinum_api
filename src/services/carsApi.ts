@@ -46,13 +46,6 @@ const deleteCar = async (carId: number) => {
   return response.json();
 };
 
-export const useGetCars = () => {
-  return useQuery({
-    queryKey: ["cars"],
-    queryFn: getCars,
-  });
-};
-
 const updateCar = async (id: number, formData: FormData) => {
   const response = await fetch(`/cars/${id}`, {
     method: "PUT",
@@ -64,6 +57,45 @@ const updateCar = async (id: number, formData: FormData) => {
   }
 
   return response.json();
+};
+
+const addAboutData = async (data: { about: string; phoneNumber: string }) => {
+  try {
+    const response = await fetch("/about/api", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (response.ok) {
+      console.log("About Us content saved successfully");
+    } else {
+      console.error("Failed to save content");
+    }
+  } catch (error) {
+    console.error("An error occurred:", error);
+  }
+};
+
+async function getAboutData(): Promise<any> {
+  const res = await fetch("/about/api");
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch about data");
+  }
+
+  return res.json();
+}
+
+/********* hooks *********/
+
+export const useGetCars = () => {
+  return useQuery({
+    queryKey: ["cars"],
+    queryFn: getCars,
+  });
 };
 
 export const useAddCar = () => {
@@ -122,5 +154,25 @@ export const useDeleteCar = () => {
     onError: (error) => {
       console.error("Error deleting car:", error);
     },
+  });
+};
+
+export const useAboutData = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: addAboutData,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["about"],
+      });
+    },
+  });
+};
+
+export const useGetAboutData = () => {
+  return useQuery({
+    queryKey: ["about"],
+    queryFn: getAboutData,
   });
 };
