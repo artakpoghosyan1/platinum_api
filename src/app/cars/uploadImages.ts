@@ -18,7 +18,8 @@ export async function uploadImages(images: File[], carId: number) {
 
     const filename = `${Date.now()}-${image.name}`;
     const filepath = path.join(uploadDir, filename);
-    const url = `/uploads/${filename}`;
+    const baseUrl = process.env.BASE_URL;
+    const url = `${baseUrl}/uploads/${filename}`;
 
     // Write the image to the file system
     fs.writeFileSync(filepath, buffer);

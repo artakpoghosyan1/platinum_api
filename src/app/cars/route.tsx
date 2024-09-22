@@ -4,7 +4,21 @@ import { uploadImages } from "@/app/cars/uploadImages";
 
 export const runtime = "nodejs";
 
-export async function POST(request: Request) {
+// Helper function to set CORS headers
+function setCorsHeaders(response: NextResponse) {
+  response.headers.set("Access-Control-Allow-Origin", "*"); // TODO: Artak handle cors
+  response.headers.set("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  response.headers.set("Access-Control-Allow-Headers", "Content-Type");
+}
+
+// Handle preflight OPTIONS requests
+export async function OPTIONS() {
+  const response = NextResponse.json(null, { status: 204 });
+  setCorsHeaders(response);
+  return response;
+}
+
+export async function POST(request: NextResponse) {
   try {
     const formData = await request.formData();
 
@@ -39,16 +53,26 @@ export async function POST(request: Request) {
     // Process and upload images
     await uploadImages(images, newCar.id);
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       message: "Car added successfully",
       cars: newCar,
     });
+
+    // Set CORS headers
+    setCorsHeaders(response);
+
+    return response;
   } catch (error) {
     console.error("Error processing request:", error);
-    return NextResponse.json(
+    const response = NextResponse.json(
       { error: "Error processing request" },
       { status: 500 },
     );
+
+    // Set CORS headers
+    setCorsHeaders(response);
+
+    return response;
   }
 }
 
@@ -60,9 +84,22 @@ export async function GET() {
       },
     });
 
-    return NextResponse.json(cars);
+    const response = NextResponse.json(cars);
+
+    // Set CORS headers
+    setCorsHeaders(response);
+
+    return response;
   } catch (error) {
     console.error("Error fetching cars:", error);
-    return NextResponse.json({ error: "Error fetching cars" }, { status: 500 });
+    const response = NextResponse.json(
+      { error: "Error fetching cars" },
+      { status: 500 },
+    );
+
+    // Set CORS headers
+    setCorsHeaders(response);
+
+    return response;
   }
 }
