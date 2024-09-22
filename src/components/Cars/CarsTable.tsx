@@ -3,6 +3,7 @@
 import { Dispatch, FC, ReactNode, SetStateAction } from "react";
 import { Car, ServerCar } from "@/models/cars";
 import { TableActions } from "@/components/Cars/TableActions";
+import Image from "next/image";
 
 interface Props {
   cars: ServerCar[];
@@ -51,7 +52,9 @@ const CarsTable: FC<Props> = ({ cars, setCurrentCarId }) => {
                         {col.id === "name" && `${car.make} ${car.model}`}
 
                         {index === 0 && car.images.length > 0 && (
-                          <img
+                          <Image
+                            width={64}
+                            height={64}
                             src={car.images[0].url}
                             alt={car.images[0].filename}
                             className="mt-3 max-w-14"

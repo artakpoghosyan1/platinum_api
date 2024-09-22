@@ -1,12 +1,13 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
 import { useDeleteImage } from "@/services/carsApi";
+import Image from "next/image";
 
 interface ImageUploadProps {
   images: File[];
-  setImages: (images: File[]) => void;
+  setFieldValue: (field: string, value: any) => any;
 }
 
-const ImageUpload: React.FC<ImageUploadProps> = ({ images, setImages }) => {
+const ImageUpload: React.FC<ImageUploadProps> = ({ images, setFieldValue }) => {
   const [previewImages, setPreviewImages] = useState<
     { url: string; id?: number }[]
   >([]);
@@ -18,8 +19,8 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ images, setImages }) => {
       id: (file as any)["id"],
     }));
     setPreviewImages(updatedPreviews);
-    setImages(images);
-  }, [images]);
+    setFieldValue("images", images);
+  }, [images, setPreviewImages, setFieldValue]);
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = Array.from(e.target.files || []);
@@ -30,7 +31,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ images, setImages }) => {
     }));
 
     setPreviewImages([...previewImages, ...updatedPreviews]);
-    setImages([...images, ...selectedFiles]);
+    setFieldValue("images", [...images, ...selectedFiles]);
   };
 
   const handleDeleteImage = (
@@ -48,13 +49,12 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ images, setImages }) => {
       });
     }
 
-    const handleFilter = (prevImages: any[]) => {
-      return prevImages.filter((_, i) => i !== index);
-    };
-
     // @ts-ignore
-    setImages(handleFilter);
-    setPreviewImages(handleFilter);
+    setFieldValue(
+      "images",
+      images.filter((_, i) => i !== index),
+    );
+    setPreviewImages((prevImages) => prevImages.filter((_, i) => i !== index));
   };
 
   return (
@@ -69,9 +69,10 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ images, setImages }) => {
 
       <div className="flex space-x-4">
         {previewImages.map(({ url, id }, index) => (
-          <div className="relative">
-            <img
-              key={index}
+          <div className="relative" key={url}>
+            <Image
+              width="64"
+              height="64"
               src={url}
               alt="Preview"
               className="h-16 w-16 object-cover"

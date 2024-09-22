@@ -51,7 +51,7 @@ const Cars: FC = () => {
     } else {
       setEditableCar(null);
     }
-  }, [currentCarId, cars]);
+  }, [currentCarId, cars, setEditableCar, openModal]);
 
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error loading cars</div>;

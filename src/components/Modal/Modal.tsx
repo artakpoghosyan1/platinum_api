@@ -22,7 +22,7 @@ export const Modal: FC<Props> = ({ children, onClose }) => {
     return () => {
       window.removeEventListener("keydown", handleEscKey);
     };
-  }, []);
+  }, [onClose]);
 
   return (
     <dialog id="my_modal_1" className="modal" ref={modalRef}>

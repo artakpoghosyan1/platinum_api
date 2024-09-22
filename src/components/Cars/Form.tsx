@@ -232,9 +232,7 @@ const EditForm: FC<Props> = ({ car, onCloseModal }) => {
                 <label className="label">Upload Images</label>
                 <ImageUpload
                   images={initialValues.images}
-                  setImages={(images: File[]) =>
-                    setFieldValue("images", images)
-                  }
+                  setFieldValue={setFieldValue}
                 />
                 <ErrorMessage
                   name="images"
