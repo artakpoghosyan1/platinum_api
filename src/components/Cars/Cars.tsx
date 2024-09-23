@@ -6,6 +6,7 @@ import EditForm from "@/components/Cars/Form";
 import { Car, ServerCar } from "@/models/cars";
 import { FC, useCallback, useEffect, useState } from "react";
 import { useGetCars } from "@/services/carsApi";
+import Loader from "@/components/common/Loader";
 
 const Cars: FC = () => {
   const [currentCarId, setCurrentCarId] = useState<number | null>(null);
@@ -53,7 +54,7 @@ const Cars: FC = () => {
     }
   }, [currentCarId, cars, setEditableCar, openModal]);
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <Loader />;
   if (isError) return <div>Error loading cars</div>;
 
   return (

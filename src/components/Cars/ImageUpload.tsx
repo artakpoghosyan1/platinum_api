@@ -61,6 +61,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ images, setFieldValue }) => {
     <div className="flex flex-col">
       <input
         type="file"
+        name="images"
         multiple
         accept="image/*"
         className="file-input mb-6 w-full max-w-xs"

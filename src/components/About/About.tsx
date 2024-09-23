@@ -4,12 +4,16 @@ import { FC, useMemo } from "react";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useAboutData, useGetAboutData } from "@/services/carsApi";
+import Loader from "@/components/common/Loader";
 
 // Yup validation schema
 const validationSchema = Yup.object().shape({
   about: Yup.string().required("about is required"),
   phoneNumber: Yup.string()
-    .matches(/^[0-9]{10}$/, "Phone number must be exactly 10 digits")
+    .matches(
+      /^(055|095|077|010|033|041|060|099|091|094|093|011)\d{6}$/,
+      "Phone number must be in the correct format",
+    )
     .required("Phone number is required"),
 });
 
@@ -58,7 +62,7 @@ const AboutForm: FC = () => {
               <Field
                 name="phoneNumber"
                 className="input input-bordered w-full"
-                placeholder="Enter phone number"
+                placeholder="055000000"
               />
               <ErrorMessage
                 name="phoneNumber"
@@ -66,14 +70,17 @@ const AboutForm: FC = () => {
                 className="text-red"
               />
             </div>
-
             <div className="flex justify-end">
               <button
                 type="submit"
                 className="btn btn-primary"
-                disabled={isSubmitting}
+                disabled={isSubmitting || aboutDataMutation.isPending}
               >
-                Save
+                {aboutDataMutation.isPending ? (
+                  <Loader size="small" color="border-white" />
+                ) : (
+                  "Save"
+                )}
               </button>
             </div>
           </Form>

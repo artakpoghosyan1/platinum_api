@@ -23,7 +23,7 @@ export default function RootLayout({
       <body suppressHydrationWarning={true}>
         <div className="h-full dark:bg-boxdark-2 dark:text-bodydark">
           {loading ? (
-            <Loader />
+            <Loader fullScreen />
           ) : (
             <ReactQueryProvider>{children}</ReactQueryProvider>
           )}

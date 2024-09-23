@@ -6,6 +6,7 @@ import { ErrorMessage, Field, Formik, Form } from "formik";
 import { Car } from "@/models/cars";
 import ImageUpload from "@/components/Cars/ImageUpload";
 import { useAddCar, useEditCar } from "@/services/carsApi";
+import Loader from "@/components/common/Loader";
 
 interface Props {
   car: Car | null;
@@ -15,13 +16,23 @@ interface Props {
 const validationSchema = Yup.object().shape({
   make: Yup.string().required("Make is required"),
   model: Yup.string().required("Model is required"),
-  year: Yup.number().required("Year is required").positive().integer(),
+  year: Yup.number()
+    .required("Year is required")
+    .positive()
+    .integer()
+    .min(1886, "Year must be 1886 or later") // Assuming 1886 as the earliest year for cars
+    .max(
+      new Date().getFullYear(),
+      `Year must be ${new Date().getFullYear()} or earlier`,
+    ),
   vinCode: Yup.string().required("Vin code is required"),
   price: Yup.number().required("Price is required").positive(),
   description: Yup.string().required("Description is required"),
   color: Yup.string().required("Color is required"),
   mileage: Yup.number().required("Mile age is required").positive().integer(),
-  images: Yup.array(),
+  images: Yup.array()
+    .min(1, "At least one image is required")
+    .required("At least one image is required"),
   engine: Yup.string().required("Engine is required"),
   bodyType: Yup.string().required("Body type is required"),
 });
@@ -34,13 +45,13 @@ const EditForm: FC<Props> = ({ car, onCloseModal }) => {
     () => ({
       make: car?.make || "",
       model: car?.model || "",
-      year: car?.year || 0,
+      year: car?.year || "",
       vinCode: car?.vinCode || "",
-      price: car?.price || 0,
+      price: car?.price || "",
       description: car?.description || "",
       color: car?.color || "",
       images: car?.images || [],
-      mileage: car?.mileage || 0,
+      mileage: car?.mileage || "",
       engine: car?.engine || "",
       bodyType: car?.bodyType || "",
     }),
@@ -73,7 +84,7 @@ const EditForm: FC<Props> = ({ car, onCloseModal }) => {
       } else {
         addCarMutation.mutate(formData);
       }
-      onCloseModal(); // Close modal after adding or editing
+      onCloseModal();
       console.log("Operation completed successfully");
     } catch (error) {
       console.error("An error occurred:", error);
@@ -92,7 +103,7 @@ const EditForm: FC<Props> = ({ car, onCloseModal }) => {
         onSubmit={handleSubmit}
         enableReinitialize
       >
-        {({ setFieldValue }) => {
+        {({ setFieldValue, isSubmitting }) => {
           return (
             <Form>
               <div className="flex gap-x-10">
@@ -202,6 +213,7 @@ const EditForm: FC<Props> = ({ car, onCloseModal }) => {
                   />
                 </div>
               </div>
+
               <div className="flex gap-x-10">
                 <div className="form-control mb-4 flex-1">
                   <label className="label">Color</label>
@@ -234,6 +246,7 @@ const EditForm: FC<Props> = ({ car, onCloseModal }) => {
                   images={initialValues.images}
                   setFieldValue={setFieldValue}
                 />
+
                 <ErrorMessage
                   name="images"
                   component="div"
@@ -242,8 +255,16 @@ const EditForm: FC<Props> = ({ car, onCloseModal }) => {
               </div>
 
               <div className="mt-10">
-                <button type="submit" className="btn btn-primary mr-4">
-                  Save
+                <button
+                  type="submit"
+                  className="btn btn-primary mr-4"
+                  disabled={isSubmitting || addCarMutation.isPending}
+                >
+                  {addCarMutation.isPending ? (
+                    <Loader size="small" color="border-white" />
+                  ) : (
+                    "Save"
+                  )}
                 </button>
                 <button
                   type="button"

@@ -53,6 +53,7 @@ export async function GET() {
 }
 
 // API route to handle the "About Us" form submission
+// API route to handle the "About Us" form submission
 export async function POST(req: NextRequest) {
   try {
     const { about, phoneNumber } = await req.json();
@@ -66,83 +67,58 @@ export async function POST(req: NextRequest) {
       return response;
     }
 
-    const pageData = await prisma.pages.create({
-      data: {
-        name: "about",
-        content: {
-          about,
-          phoneNumber,
-        },
-      },
+    // Check if the "About Us" content already exists
+    const existingPage = await prisma.pages.findFirst({
+      where: { name: "about" },
     });
 
-    const response = NextResponse.json(
-      {
-        message: "About Us content saved successfully",
-        pageData,
-      },
-      { status: 201 },
-    );
+    let response;
+    if (existingPage) {
+      // Update the existing "About Us" content
+      const updatedPage = await prisma.pages.update({
+        where: { id: existingPage.id },
+        data: {
+          content: {
+            about,
+            phoneNumber,
+          },
+        },
+      });
+
+      response = NextResponse.json(
+        {
+          message: "About Us content updated successfully",
+          updatedPage,
+        },
+        { status: 200 },
+      );
+    } else {
+      // Create new "About Us" content
+      const pageData = await prisma.pages.create({
+        data: {
+          name: "about",
+          content: {
+            about,
+            phoneNumber,
+          },
+        },
+      });
+
+      response = NextResponse.json(
+        {
+          message: "About Us content saved successfully",
+          pageData,
+        },
+        { status: 201 },
+      );
+    }
+
     setCorsHeaders(response);
     return response;
   } catch (error) {
     console.error("Error saving About Us content:", error);
     const response = NextResponse.json(
       { error: "Failed to save content" },
-      { status: 500 },
-    );
-    setCorsHeaders(response);
-    return response;
-  }
-}
-
-// API route to update the "About Us" content
-export async function PUT(req: NextRequest) {
-  try {
-    const { about, phoneNumber } = await req.json();
-
-    if (!about || !phoneNumber) {
-      const response = NextResponse.json(
-        { error: "Content and phone number are required for update" },
-        { status: 400 },
-      );
-      setCorsHeaders(response);
-      return response;
-    }
-
-    // Update the existing "About Us" content
-    const updatedPage = await prisma.pages.updateMany({
-      where: { name: "about" },
-      data: {
-        content: {
-          about,
-          phoneNumber,
-        },
-      },
-    });
-
-    if (updatedPage.count === 0) {
-      const response = NextResponse.json(
-        { error: "About Us content not found for updating" },
-        { status: 404 },
-      );
-      setCorsHeaders(response);
-      return response;
-    }
-
-    const response = NextResponse.json(
-      {
-        message: "About Us content updated successfully",
-        updatedPage,
-      },
-      { status: 200 },
-    );
-    setCorsHeaders(response);
-    return response;
-  } catch (error) {
-    console.error("Error updating About Us content:", error);
-    const response = NextResponse.json(
-      { error: "Failed to update content" },
       { status: 500 },
     );
     setCorsHeaders(response);

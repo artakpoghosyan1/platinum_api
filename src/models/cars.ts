@@ -8,12 +8,12 @@ export interface Image {
 export interface Car {
   make: string;
   model: string;
-  year: number;
+  year: number | string;
   vinCode: string | null;
-  price: number;
+  price: number | string;
   description: string | null;
   color: string;
-  mileage: number;
+  mileage: number | string;
   engine: string;
   bodyType: string;
   images: File[];

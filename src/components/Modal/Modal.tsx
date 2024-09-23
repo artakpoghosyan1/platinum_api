@@ -45,8 +45,6 @@ export const Modal: FC<Props> = ({ children, onClose }) => {
             />
           </svg>
         </button>
-        <h3 className="text-lg font-bold">Hello!</h3>
-
         {children}
       </div>
     </dialog>
