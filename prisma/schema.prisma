@@ -1,0 +1,47 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model cars {
+  id          Int      @id @default(autoincrement())
+  vinCode     String?  @db.VarChar(50)
+  make        String   @db.VarChar(255)
+  model       String   @db.VarChar(255)
+  year        Int      @db.UnsignedSmallInt
+  price       Decimal  @db.Decimal(9, 2)
+  description String?  @db.Text
+  color       String   @db.VarChar(50)
+  mileage     Int      @db.UnsignedMediumInt
+  createdAt   DateTime @default(now()) @db.Timestamp(0)
+  updatedAt   DateTime @default(now()) @db.Timestamp(0)
+  images      images[]
+  engine      String   @db.VarChar(255)
+  bodyType    String   @db.VarChar(255)
+}
+
+model images {
+  id        Int      @id @default(autoincrement())
+  carId     Int
+  filename  String   @db.VarChar(255)
+  url       String   @db.VarChar(255)
+  createdAt DateTime @default(now()) @db.Timestamp(0)
+  cars      cars     @relation(fields: [carId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_images_cars")
+
+  @@index([carId], map: "FK_images_cars")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model Pages {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique @db.VarChar(50)
+  content   Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("pages")
+}
