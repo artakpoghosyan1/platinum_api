@@ -32,7 +32,7 @@ const menuGroups = [
           </svg>
         ),
         label: "Cars",
-        route: "/",
+        route: "/dashboard",
       },
       {
         icon: (

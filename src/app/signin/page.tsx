@@ -1,17 +1,24 @@
 "use client";
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+
+import { FC, FormEvent, useState } from "react";
 import ErrorAlert from "@/components/common/ErrorAlert";
 import Loader from "@/components/common/Loader";
+import { useUser } from "@/app/contexts/UserContext";
+import { useRouter } from "next/navigation";
 
-const SignIn: React.FC = () => {
-  const [username, setUsername] = useState("");
+const SignIn: FC = () => {
+  const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const { setUsername, username } = useUser();
   const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  if (username) {
+    router.push("/dashboard");
+  }
+
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
     setIsLoading(true);
@@ -20,9 +27,11 @@ const SignIn: React.FC = () => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ username, password }),
+      body: JSON.stringify({ username: name, password }),
     });
 
+    const response = await res.json();
+    setUsername(response.username);
     setIsLoading(false);
 
     if (res.ok) {
@@ -53,7 +62,7 @@ const SignIn: React.FC = () => {
                   <input
                     type="username"
                     name="username"
-                    onChange={(e) => setUsername(e.target.value)}
+                    onChange={(e) => setName(e.target.value)}
                     placeholder="Enter your username"
                     className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                   />

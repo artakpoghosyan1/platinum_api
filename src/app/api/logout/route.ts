@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { serialize } from "cookie";
 
-export async function GET() {
+export async function GET(request: Request) {
   const cookie = serialize("token", "", {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
@@ -9,8 +9,8 @@ export async function GET() {
     path: "/", // Ensure the cookie is removed from all paths
   });
 
-  const response = NextResponse.json({ message: "Logged out" }); // No redirection
-  response.headers.append("Set-Cookie", cookie);
-
+  const url = new URL("/signin", request.url);
+  const response = NextResponse.redirect(url);
+  response.headers.set("Set-Cookie", cookie);
   return response;
 }

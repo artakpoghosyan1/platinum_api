@@ -1,19 +1,16 @@
 import { useState } from "react";
 import Link from "next/link";
 import ClickOutside from "@/components/ClickOutside";
-import { useRouter } from "next/navigation";
 
 const DropdownUser = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
-
-  const router = useRouter();
 
   const handleLogout = async () => {
     await fetch("/api/logout", {
       method: "GET",
     });
 
-    router.push("/signin");
+    window.location.href = "/signin";
   };
 
   return (

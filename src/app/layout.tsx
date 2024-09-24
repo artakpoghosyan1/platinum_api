@@ -6,6 +6,7 @@ import "@/css/style.css";
 import React, { useEffect, useState } from "react";
 import Loader from "@/components/common/Loader";
 import ReactQueryProvider from "@/lib/ReactQueryProvider";
+import { UserProvider } from "@/app/contexts/UserContext";
 
 export default function RootLayout({
   children,
@@ -22,11 +23,13 @@ export default function RootLayout({
     <html lang="en">
       <body suppressHydrationWarning={true}>
         <div className="h-full dark:bg-boxdark-2 dark:text-bodydark">
-          {loading ? (
-            <Loader fullScreen />
-          ) : (
-            <ReactQueryProvider>{children}</ReactQueryProvider>
-          )}
+          <UserProvider>
+            {loading ? (
+              <Loader fullScreen />
+            ) : (
+              <ReactQueryProvider>{children}</ReactQueryProvider>
+            )}
+          </UserProvider>
         </div>
       </body>
     </html>
