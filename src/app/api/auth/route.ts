@@ -24,7 +24,7 @@ export async function POST(request: Request) {
       path: "/",
     });
 
-    const response = NextResponse.json({ message: "Login successful" });
+    const response = NextResponse.json({ username });
     response.headers.set("Set-Cookie", cookie);
     return response;
   }
