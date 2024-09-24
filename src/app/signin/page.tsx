@@ -1,6 +1,5 @@
 "use client";
 import React, { useState } from "react";
-import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import { useRouter } from "next/navigation";
 import ErrorAlert from "@/components/common/ErrorAlert";
 import Loader from "@/components/common/Loader";
@@ -36,8 +35,6 @@ const SignIn: React.FC = () => {
 
   return (
     <div className="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
-      <Breadcrumb pageName="Sign In" />
-
       <div className="flex justify-center">
         <div className="w-full rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark xl:w-1/2 xl:border-l-2">
           {error && <ErrorAlert message={error} />}
