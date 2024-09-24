@@ -18,7 +18,7 @@ export async function OPTIONS() {
   return response;
 }
 
-export async function POST(request: NextResponse) {
+export async function POST(request: Request) {
   try {
     const formData = await request.formData();
 
