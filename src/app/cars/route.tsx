@@ -33,6 +33,8 @@ export async function POST(request: Request) {
     const engine = formData.get("engine") as string;
     const bodyType = formData.get("bodyType") as string;
     const images = formData.getAll("images") as File[];
+    const ratesData = formData.get("rates") as string | undefined;
+    const rates = ratesData ? { rates: JSON.parse(ratesData) } : null;
 
     // Save car data to database
     const newCar = await prisma.cars.create({
@@ -47,6 +49,7 @@ export async function POST(request: Request) {
         mileage,
         engine,
         bodyType,
+        ...rates,
       },
     });
 

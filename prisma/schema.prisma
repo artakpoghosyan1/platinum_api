@@ -13,7 +13,8 @@ model cars {
   make        String   @db.VarChar(255)
   model       String   @db.VarChar(255)
   year        Int      @db.UnsignedSmallInt
-  price       Decimal  @db.Decimal(9, 2)
+  price       Decimal  @db.Decimal(18, 2)
+  rates       Json?    @default("{}")
   description String?  @db.Text
   color       String   @db.VarChar(50)
   mileage     Int      @db.UnsignedMediumInt

@@ -21,24 +21,30 @@ const SignIn: FC = () => {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
-    setIsLoading(true);
-    const res = await fetch("/api/auth", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ username: name, password }),
-    });
+    try {
+      setIsLoading(true);
+      const res = await fetch("/api/auth", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username: name, password }),
+      });
 
-    const response = await res.json();
-    setUsername(response.username);
-    setIsLoading(false);
+      const response = await res.json();
+      setUsername(response.username);
 
-    if (res.ok) {
-      router.push("/dashboard"); // Redirect to a protected page
-    } else {
-      const { error } = await res.json();
-      setError(error);
+      if (res.ok) {
+        console.log("successfully logged in");
+        window.location.href = "/dashboard";
+      } else {
+        const { error } = await res.json();
+        setError(error);
+        setIsLoading(false);
+      }
+    } catch (error: any) {
+      setError(error.message);
+      setIsLoading(false);
     }
   };
 

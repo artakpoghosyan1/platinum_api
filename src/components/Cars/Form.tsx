@@ -7,10 +7,17 @@ import { Car } from "@/models/cars";
 import ImageUpload from "@/components/Cars/ImageUpload";
 import { useAddCar, useEditCar } from "@/services/carsApi";
 import Loader from "@/components/common/Loader";
+import { Rates } from "@/components/Cars/Rates";
+import { toast } from "react-toastify";
 
 interface Props {
   car: Car | null;
   onCloseModal: () => void;
+}
+
+interface FormCarData extends Omit<Car, "rates"> {
+  usd?: number;
+  rur?: number;
 }
 
 const validationSchema = Yup.object().shape({
@@ -27,6 +34,8 @@ const validationSchema = Yup.object().shape({
     ),
   vinCode: Yup.string().required("Vin code is required"),
   price: Yup.number().required("Price is required").positive(),
+  usd: Yup.number().positive(),
+  rur: Yup.number().positive(),
   description: Yup.string().required("Description is required"),
   color: Yup.string().required("Color is required"),
   mileage: Yup.number().required("Mile age is required").positive().integer(),
@@ -41,7 +50,7 @@ const EditForm: FC<Props> = ({ car, onCloseModal }) => {
   const addCarMutation = useAddCar();
   const editCarMutation = useEditCar();
 
-  const initialValues: Car = useMemo(
+  const initialValues: FormCarData = useMemo(
     () => ({
       make: car?.make || "",
       model: car?.model || "",
@@ -58,7 +67,7 @@ const EditForm: FC<Props> = ({ car, onCloseModal }) => {
     [car],
   );
 
-  const handleSubmit = async (values: Car) => {
+  const handleSubmit = async (values: FormCarData) => {
     try {
       const formData = new FormData();
 
@@ -73,6 +82,13 @@ const EditForm: FC<Props> = ({ car, onCloseModal }) => {
       formData.append("mileage", values.mileage.toString());
       formData.append("engine", values.engine.toString());
       formData.append("bodyType", values.bodyType.toString());
+      formData.append(
+        "rates",
+        JSON.stringify({
+          usd: values.usd,
+          rur: values.rur,
+        }),
+      );
 
       // Append images to formData
       values.images.forEach((file: File) => {
@@ -80,14 +96,25 @@ const EditForm: FC<Props> = ({ car, onCloseModal }) => {
       });
 
       if (car?.id) {
-        editCarMutation.mutate({ id: car.id, formData });
+        editCarMutation.mutate(
+          { id: car.id, formData },
+          {
+            onSuccess: onCloseModal,
+            onError: (error) =>
+              toast.error(error.message, { position: "top-center" }),
+          },
+        );
       } else {
-        addCarMutation.mutate(formData);
+        addCarMutation.mutate(formData, {
+          onSuccess: onCloseModal,
+          onError: (error) => {
+            toast.error(error.message, { position: "top-center" });
+          },
+        });
       }
-      onCloseModal();
       console.log("Operation completed successfully");
-    } catch (error) {
-      console.error("An error occurred:", error);
+    } catch (error: any) {
+      toast.error(error.message, { position: "top-center" });
     }
   };
 
@@ -108,8 +135,10 @@ const EditForm: FC<Props> = ({ car, onCloseModal }) => {
             <Form>
               <div className="flex gap-x-10">
                 <div className="form-control mb-4 flex-1">
-                  <label className="label">Make</label>
-                  <Field name="make" className="input input-bordered" />
+                  <label className="mb-2 after:text-red after:content-['*']">
+                    Make
+                  </label>
+                  <Field name="make" className="input input-bordered " />
                   <ErrorMessage
                     name="make"
                     component="div"
@@ -118,7 +147,9 @@ const EditForm: FC<Props> = ({ car, onCloseModal }) => {
                 </div>
 
                 <div className="form-control mb-4 flex-1">
-                  <label className="label">Model</label>
+                  <label className="mb-2 after:text-red after:content-['*']">
+                    Model
+                  </label>
                   <Field name="model" className="input input-bordered" />
                   <ErrorMessage
                     name="model"
@@ -130,7 +161,9 @@ const EditForm: FC<Props> = ({ car, onCloseModal }) => {
 
               <div className="flex gap-x-10">
                 <div className="form-control mb-4 flex-1">
-                  <label className="label">Year</label>
+                  <label className="mb-2 after:text-red after:content-['*']">
+                    Year
+                  </label>
                   <Field
                     name="year"
                     type="number"
@@ -144,7 +177,9 @@ const EditForm: FC<Props> = ({ car, onCloseModal }) => {
                 </div>
 
                 <div className="form-control mb-4 flex-1">
-                  <label className="label">Vin code</label>
+                  <label className="mb-2 after:text-red after:content-['*']">
+                    Vin code
+                  </label>
                   <Field name="vinCode" className="input input-bordered" />
                   <ErrorMessage
                     name="vinCode"
@@ -156,11 +191,13 @@ const EditForm: FC<Props> = ({ car, onCloseModal }) => {
 
               <div className="flex gap-x-10">
                 <div className="form-control mb-4 flex-1">
-                  <label className="label">Price</label>
+                  <label className="mb-2 after:text-red after:content-['*']">
+                    Price <i>(AMD)</i>
+                  </label>
                   <Field
                     name="price"
                     type="number"
-                    className="input input-bordered"
+                    className="input input-bordered w-full"
                   />
                   <ErrorMessage
                     name="price"
@@ -170,7 +207,9 @@ const EditForm: FC<Props> = ({ car, onCloseModal }) => {
                 </div>
 
                 <div className="form-control mb-4 flex-1">
-                  <label className="label">Mile age</label>
+                  <label className="mb-2 after:text-red after:content-['*']">
+                    Mile age
+                  </label>
                   <Field
                     name="mileage"
                     type="number"
@@ -185,29 +224,21 @@ const EditForm: FC<Props> = ({ car, onCloseModal }) => {
               </div>
 
               <div className="flex gap-x-10">
-                <div className="form-control mb-4 flex-1">
-                  <label className="label">Engine</label>
-                  <Field
-                    name="engine"
-                    type="text"
-                    className="input input-bordered"
-                  />
-                  <ErrorMessage
-                    name="engine"
-                    component="div"
-                    className="text-red"
-                  />
+                <div className="mb-4 flex flex-1 space-x-4">
+                  <Rates />
                 </div>
 
                 <div className="form-control mb-4 flex-1">
-                  <label className="label">Body type</label>
+                  <label className="mb-2 after:text-red after:content-['*']">
+                    Engine
+                  </label>
                   <Field
-                    name="bodyType"
+                    name="engine"
                     type="text"
                     className="input input-bordered"
                   />
                   <ErrorMessage
-                    name="bodyType"
+                    name="engine"
                     component="div"
                     className="text-red"
                   />
@@ -216,7 +247,25 @@ const EditForm: FC<Props> = ({ car, onCloseModal }) => {
 
               <div className="flex gap-x-10">
                 <div className="form-control mb-4 flex-1">
-                  <label className="label">Color</label>
+                  <label className="mb-2 after:text-red after:content-['*']">
+                    Body type
+                  </label>
+                  <Field
+                    name="bodyType"
+                    type="text"
+                    className="input input-bordered"
+                  />
+                  <ErrorMessage
+                    name="bodyType"
+                    component="div"
+                    className="text-red"
+                  />
+                </div>
+
+                <div className="form-control mb-4 flex-1">
+                  <label className="mb-2 after:text-red after:content-['*']">
+                    Color
+                  </label>
                   <Field name="color" className="input input-bordered" />
                   <ErrorMessage
                     name="color"
@@ -224,9 +273,27 @@ const EditForm: FC<Props> = ({ car, onCloseModal }) => {
                     className="text-red"
                   />
                 </div>
+              </div>
+
+              <div className="flex gap-x-10">
+                <div className="form-control mb-4 flex-1">
+                  <label className="mb-2 after:text-red after:content-['*']">
+                    Upload Images
+                  </label>
+                  <ImageUpload
+                    images={initialValues.images}
+                    setFieldValue={setFieldValue}
+                  />
+
+                  <ErrorMessage
+                    name="images"
+                    component="div"
+                    className="text-red"
+                  />
+                </div>
 
                 <div className="form-control mb-4 flex-1">
-                  <label className="label">Description</label>
+                  <label className="mb-2">Description</label>
                   <Field
                     name="description"
                     as="textarea"
@@ -238,20 +305,6 @@ const EditForm: FC<Props> = ({ car, onCloseModal }) => {
                     className="text-red"
                   />
                 </div>
-              </div>
-
-              <div className="form-control mb-4 flex-1">
-                <label className="label">Upload Images</label>
-                <ImageUpload
-                  images={initialValues.images}
-                  setFieldValue={setFieldValue}
-                />
-
-                <ErrorMessage
-                  name="images"
-                  component="div"
-                  className="text-red"
-                />
               </div>
 
               <div className="mt-10">

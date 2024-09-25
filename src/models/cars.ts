@@ -5,12 +5,18 @@ export interface Image {
   url: string;
 }
 
+interface Rates {
+  usd: number;
+  rur: number;
+}
+
 export interface Car {
   make: string;
   model: string;
   year: number | string;
   vinCode: string | null;
   price: number | string;
+  rates?: Rates;
   description: string | null;
   color: string;
   mileage: number | string;

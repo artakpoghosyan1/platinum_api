@@ -1,6 +1,7 @@
 "use client";
 
 import { FC, ReactNode, RefObject, useEffect, useRef } from "react";
+import { ToastContainer } from "react-toastify";
 
 interface Props {
   children: ReactNode;
@@ -26,6 +27,7 @@ export const Modal: FC<Props> = ({ children, onClose }) => {
 
   return (
     <dialog id="my_modal_1" className="modal" ref={modalRef}>
+      <ToastContainer />
       <div className="modal-box relative w-11/12 max-w-5xl">
         <button className="absolute right-5 top-5" onClick={onClose}>
           <svg
