@@ -58,17 +58,25 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ images, setFieldValue }) => {
   };
 
   return (
-    <div className="flex flex-col">
+    <div>
+      <label
+        htmlFor="imageUpload"
+        className="inline-flex w-auto cursor-pointer items-center justify-center rounded-md border border-primary px-10 py-4 text-center font-medium text-primary hover:bg-opacity-90 lg:px-8 xl:px-10"
+      >
+        Choose car images
+      </label>
+
       <input
+        id="imageUpload"
         type="file"
         name="images"
         multiple
         accept="image/*"
-        className="file-input mb-6 w-full max-w-xs"
+        className="hidden"
         onChange={handleImageChange}
       />
 
-      <div className="flex space-x-4">
+      <div className={`${previewImages.length && "mt-10"} flex space-x-4`}>
         {previewImages.map(({ url, id }, index) => (
           <div className="relative" key={url}>
             <Image

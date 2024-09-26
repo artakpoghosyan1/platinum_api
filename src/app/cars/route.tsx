@@ -33,6 +33,7 @@ export async function POST(request: Request) {
     const engine = formData.get("engine") as string;
     const bodyType = formData.get("bodyType") as string;
     const images = formData.getAll("images") as File[];
+    const vinUrl = formData.get("vinUrl") as string;
     const ratesData = formData.get("rates") as string | undefined;
     const rates = ratesData ? { rates: JSON.parse(ratesData) } : null;
 
@@ -49,6 +50,7 @@ export async function POST(request: Request) {
         mileage,
         engine,
         bodyType,
+        vinUrl,
         ...rates,
       },
     });

@@ -10,6 +10,7 @@ datasource db {
 model cars {
   id          Int      @id @default(autoincrement())
   vinCode     String?  @db.VarChar(50)
+  vinUrl      String?  @db.VarChar(50)
   make        String   @db.VarChar(255)
   model       String   @db.VarChar(255)
   year        Int      @db.UnsignedSmallInt

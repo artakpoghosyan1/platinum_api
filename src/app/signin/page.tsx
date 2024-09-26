@@ -36,7 +36,7 @@ const SignIn: FC = () => {
 
       if (res.ok) {
         console.log("successfully logged in");
-        window.location.href = "/dashboard";
+        window.history.replaceState(null, "", "/dashboard");
       } else {
         const { error } = await res.json();
         setError(error);

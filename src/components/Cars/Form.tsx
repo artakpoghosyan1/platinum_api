@@ -33,6 +33,7 @@ const validationSchema = Yup.object().shape({
       `Year must be ${new Date().getFullYear()} or earlier`,
     ),
   vinCode: Yup.string(),
+  vinUrl: Yup.string().url("Link must be a valid URL"),
   price: Yup.number().required("Price is required").positive(),
   usd: Yup.number().positive(),
   rur: Yup.number().positive(),
@@ -55,12 +56,13 @@ const EditForm: FC<Props> = ({ car, onCloseModal }) => {
   const [rurRateChecked, setRurRateChecked] = useState(false);
 
   const initialValues: FormCarData = useMemo(() => {
-    const ratesData = car?.rates || rates ? { ...car?.rates, ...rates } : {};
+    const ratesData = car?.rates || rates ? { ...rates, ...car?.rates } : {};
     return {
       make: car?.make || "",
       model: car?.model || "",
       year: car?.year || "",
       vinCode: car?.vinCode || "",
+      vinUrl: car?.vinUrl || "",
       price: car?.price || "",
       description: car?.description || "",
       color: car?.color || "",
@@ -110,13 +112,12 @@ const EditForm: FC<Props> = ({ car, onCloseModal }) => {
       formData.append("mileage", values.mileage.toString());
       formData.append("engine", values.engine.toString());
       formData.append("bodyType", values.bodyType.toString());
+      formData.append("vinUrl", values.vinUrl ?? "");
 
       const usd = usdRateChecked ? { usd: values.usd } : null;
       const rur = rurRateChecked ? { rur: values.rur } : null;
 
-      if (usd || rur) {
-        formData.append("rates", JSON.stringify({ ...usd, ...rur }));
-      }
+      formData.append("rates", JSON.stringify({ ...usd, ...rur }));
 
       // Append images to formData
       values.images.forEach((file: File) => {
@@ -158,7 +159,7 @@ const EditForm: FC<Props> = ({ car, onCloseModal }) => {
         onSubmit={handleSubmit}
         enableReinitialize
       >
-        {({ setFieldValue, isSubmitting }) => {
+        {({ setFieldValue, isSubmitting, values, handleChange }) => {
           return (
             <Form>
               <div className="flex gap-x-10">
@@ -189,16 +190,14 @@ const EditForm: FC<Props> = ({ car, onCloseModal }) => {
 
               <div className="flex gap-x-10">
                 <div className="form-control mb-4 flex-1">
-                  <label className="mb-2 after:text-red after:content-['*']">
-                    Year
-                  </label>
+                  <label className="mb-2">Vin code url</label>
                   <Field
-                    name="year"
-                    type="number"
+                    name="vinUrl"
+                    type="text"
                     className="input input-bordered"
                   />
                   <ErrorMessage
-                    name="year"
+                    name="vinUrl"
                     component="div"
                     className="text-red"
                   />
@@ -218,6 +217,22 @@ const EditForm: FC<Props> = ({ car, onCloseModal }) => {
               <div className="flex gap-x-10">
                 <div className="form-control mb-4 flex-1">
                   <label className="mb-2 after:text-red after:content-['*']">
+                    Year
+                  </label>
+                  <Field
+                    name="year"
+                    type="number"
+                    className="input input-bordered"
+                  />
+                  <ErrorMessage
+                    name="year"
+                    component="div"
+                    className="text-red"
+                  />
+                </div>
+
+                <div className="form-control mb-4 flex-1">
+                  <label className="mb-2 after:text-red after:content-['*']">
                     Price <i>(AMD)</i>
                   </label>
                   <Field
@@ -231,7 +246,9 @@ const EditForm: FC<Props> = ({ car, onCloseModal }) => {
                     className="text-red"
                   />
                 </div>
+              </div>
 
+              <div className="flex gap-x-10">
                 <div className="form-control mb-4 flex-1">
                   <label className="mb-2 after:text-red after:content-['*']">
                     Mile age
@@ -247,9 +264,7 @@ const EditForm: FC<Props> = ({ car, onCloseModal }) => {
                     className="text-red"
                   />
                 </div>
-              </div>
 
-              <div className="flex gap-x-10">
                 <div className="mb-4 flex flex-1 space-x-4">
                   <Rates
                     isRatesLoading={isRatesLoading}
@@ -261,25 +276,53 @@ const EditForm: FC<Props> = ({ car, onCloseModal }) => {
                     rates={rates}
                   />
                 </div>
+              </div>
 
+              <div className="flex gap-x-10">
                 <div className="form-control mb-4 flex-1">
                   <label className="mb-2 after:text-red after:content-['*']">
                     Engine
                   </label>
-                  <Field
-                    name="engine"
-                    type="text"
-                    className="input input-bordered"
-                  />
+                  <div className="relative">
+                    <select
+                      name="engine"
+                      value={values.engine}
+                      onChange={handleChange}
+                      className="input input-bordered w-full"
+                    >
+                      <option value="diesel">Diesel</option>
+                      <option value="electric">Electric</option>
+                      <option value="gas">Gas</option>
+                      <option value="hybrid">Hybrid</option>
+                    </select>
+
+                    <div className="pointer-events-none absolute right-3 top-1/2 flex -translate-y-1/2">
+                      <svg
+                        className="fill-current"
+                        height="15px"
+                        width="15px"
+                        version="1.1"
+                        id="Layer_1"
+                        viewBox="0 0 330 330"
+                        xmlSpace="preserve"
+                      >
+                        <path
+                          id="XMLID_225_"
+                          d="M325.607,79.393c-5.857-5.857-15.355-5.858-21.213,0.001l-139.39,139.393L25.607,79.393
+      c-5.857-5.857-15.355-5.858-21.213,0.001c-5.858,5.858-5.858,15.355,0,21.213l150.004,150c2.813,2.813,6.628,4.393,10.606,4.393
+      s7.794-1.581,10.606-4.394l149.996-150C331.465,94.749,331.465,85.251,325.607,79.393z"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+
                   <ErrorMessage
                     name="engine"
                     component="div"
                     className="text-red"
                   />
                 </div>
-              </div>
 
-              <div className="flex gap-x-10">
                 <div className="form-control mb-4 flex-1">
                   <label className="mb-2 after:text-red after:content-['*']">
                     Body type
@@ -295,7 +338,9 @@ const EditForm: FC<Props> = ({ car, onCloseModal }) => {
                     className="text-red"
                   />
                 </div>
+              </div>
 
+              <div className="flex gap-x-10">
                 <div className="form-control mb-4 flex-1">
                   <label className="mb-2 after:text-red after:content-['*']">
                     Color
@@ -303,24 +348,6 @@ const EditForm: FC<Props> = ({ car, onCloseModal }) => {
                   <Field name="color" className="input input-bordered" />
                   <ErrorMessage
                     name="color"
-                    component="div"
-                    className="text-red"
-                  />
-                </div>
-              </div>
-
-              <div className="flex gap-x-10">
-                <div className="form-control mb-4 flex-1">
-                  <label className="mb-2 after:text-red after:content-['*']">
-                    Upload Images
-                  </label>
-                  <ImageUpload
-                    images={initialValues.images}
-                    setFieldValue={setFieldValue}
-                  />
-
-                  <ErrorMessage
-                    name="images"
                     component="div"
                     className="text-red"
                   />
@@ -339,6 +366,22 @@ const EditForm: FC<Props> = ({ car, onCloseModal }) => {
                     className="text-red"
                   />
                 </div>
+              </div>
+
+              <div className="form-control mb-4 flex-1">
+                <label className="mb-2 after:text-red after:content-['*']">
+                  Upload Images
+                </label>
+                <ImageUpload
+                  images={initialValues.images}
+                  setFieldValue={setFieldValue}
+                />
+
+                <ErrorMessage
+                  name="images"
+                  component="div"
+                  className="text-red"
+                />
               </div>
 
               <div className="mt-10">

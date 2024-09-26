@@ -33,6 +33,7 @@ export async function PUT(
     const engine = body.get("engine") as string;
     const bodyType = body.get("bodyType") as string;
     const images = body.getAll("images") as File[];
+    const vinUrl = body.get("vinUrl") as string;
     const ratesData = body.get("rates") as string | undefined;
     const rates = ratesData ? { rates: JSON.parse(ratesData) } : null;
 
@@ -78,6 +79,7 @@ export async function PUT(
         mileage,
         engine,
         bodyType,
+        vinUrl,
         ...rates,
       },
     });

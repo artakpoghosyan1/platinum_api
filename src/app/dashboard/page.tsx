@@ -3,9 +3,9 @@ import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import Cars from "@/components/Cars/Cars";
 
 export const metadata: Metadata = {
-  title:
-    "Next.js E-commerce Dashboard | TailAdmin - Next.js Dashboard Template",
-  description: "This is Next.js Home for TailAdmin Dashboard Template",
+  title: "Carmark admin panel",
+  description:
+    "This is a carmark admin panel where admin can add, edit, delete cars and add about the company information",
 };
 
 export default function Dashboard() {

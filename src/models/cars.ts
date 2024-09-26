@@ -15,6 +15,7 @@ export interface Car {
   model: string;
   year: number | string;
   vinCode: string | null;
+  vinUrl: string | null;
   price: number | string;
   rates?: Rates;
   description: string | null;

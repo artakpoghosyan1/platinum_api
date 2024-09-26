@@ -37,6 +37,7 @@ export const Rates: FC<Props> = ({
     } else {
       setRurRateChecked(e.target.checked);
     }
+
     if (!e.target.checked) {
       setFieldValue(type, (rates as IRates)[type]);
     }
