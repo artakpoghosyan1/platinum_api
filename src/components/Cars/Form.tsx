@@ -387,7 +387,7 @@ const EditForm: FC<Props> = ({ car, onCloseModal }) => {
               <div className="mt-10">
                 <button
                   type="submit"
-                  className="btn btn-primary mr-4"
+                  className="mr-4 inline-flex items-center justify-center bg-meta-3 px-10 py-4 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"
                   disabled={isSubmitting || addCarMutation.isPending}
                 >
                   {addCarMutation.isPending ? (
@@ -398,7 +398,7 @@ const EditForm: FC<Props> = ({ car, onCloseModal }) => {
                 </button>
                 <button
                   type="button"
-                  className="btn btn-error"
+                  className="inline-flex items-center justify-center gap-2.5 bg-primary px-10 py-4 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"
                   onClick={onCloseModal}
                 >
                   Cancel

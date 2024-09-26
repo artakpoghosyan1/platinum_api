@@ -12,6 +12,14 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL("/signin", req.url));
   }
 
+  if (req.nextUrl.pathname === "/") {
+    if (token) {
+      return NextResponse.redirect(new URL("/dashboard", req.url));
+    } else {
+      return NextResponse.redirect(new URL("/signin", req.url));
+    }
+  }
+
   try {
     // Verify the JWT
     await jwtVerify(token, secret);
@@ -22,5 +30,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/dashboard", "/about"], // Apply middleware to protect this route
+  matcher: ["/dashboard", "/about", "/"], // Apply middleware to protect this route
 };
