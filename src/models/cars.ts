@@ -5,7 +5,7 @@ export interface Image {
   url: string;
 }
 
-interface Rates {
+export interface Rates {
   usd: number;
   rur: number;
 }

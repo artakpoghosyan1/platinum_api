@@ -10,16 +10,22 @@ import Loader from "@/components/common/Loader";
 
 const Cars: FC = () => {
   const [currentCarId, setCurrentCarId] = useState<number | null>(null);
-  const [editableCar, setEditableCar] = useState<Car | null>(null);
+  const [editableCar, setEditableCar] = useState<Car | null | undefined>(
+    undefined,
+  );
 
   const { data: cars, isLoading, isError } = useGetCars();
 
-  const openModal = useCallback(() => {
-    (document.getElementById("my_modal_1") as HTMLDialogElement)?.showModal();
-  }, []);
+  const openModal = useCallback(
+    (editableCar: Car | null | undefined = null) => {
+      setEditableCar(editableCar);
+      (document.getElementById("my_modal_1") as HTMLDialogElement)?.showModal();
+    },
+    [],
+  );
 
   const closeModal = useCallback(() => {
-    setEditableCar(null);
+    setEditableCar(undefined);
     setCurrentCarId(null);
     (document.getElementById("my_modal_1") as HTMLDialogElement)?.close();
   }, []);
@@ -44,13 +50,9 @@ const Cars: FC = () => {
       const currentCar = cars?.find((car) => car.id === currentCarId) ?? null;
       if (currentCar) {
         fetchImages(currentCar).then((carData) => {
-          setEditableCar(carData);
+          openModal(carData);
         });
-
-        openModal();
       }
-    } else {
-      setEditableCar(null);
     }
   }, [currentCarId, cars, setEditableCar, openModal]);
 
@@ -61,13 +63,15 @@ const Cars: FC = () => {
     <>
       <button
         className="mb-6 inline-flex items-center justify-center rounded-md bg-primary px-10 py-4 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"
-        onClick={openModal}
+        onClick={() => openModal()}
       >
         Add new car
       </button>
 
       <Modal onClose={closeModal}>
-        <EditForm car={editableCar} onCloseModal={closeModal} />
+        {editableCar !== undefined && (
+          <EditForm car={editableCar} onCloseModal={closeModal} />
+        )}
       </Modal>
 
       <CarsTable cars={cars as ServerCar[]} setCurrentCarId={setCurrentCarId} />

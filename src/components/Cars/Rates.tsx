@@ -1,10 +1,46 @@
-import { FC, useState } from "react";
+import { ChangeEvent, Dispatch, FC, SetStateAction } from "react";
 import { Field } from "formik";
 import { Tooltip } from "react-tooltip";
+import Loader from "@/components/common/Loader";
+import { FormikErrors } from "formik/dist/types";
+import { Rates as IRates } from "@/models/cars";
 
-export const Rates: FC = () => {
-  const [usdRateChecked, setUsdRateChecked] = useState(false);
-  const [rurRateChecked, setRurRateChecked] = useState(false);
+interface Props {
+  rates: IRates | null;
+  isRatesLoading: boolean;
+  usdRateChecked: boolean;
+  setUsdRateChecked: Dispatch<SetStateAction<boolean>>;
+  rurRateChecked: boolean;
+  setRurRateChecked: Dispatch<SetStateAction<boolean>>;
+  setFieldValue: (
+    field: string,
+    value: any,
+    shouldValidate?: boolean,
+  ) => Promise<void | FormikErrors<any>>;
+}
+
+export const Rates: FC<Props> = ({
+  isRatesLoading,
+  usdRateChecked,
+  setUsdRateChecked,
+  rurRateChecked,
+  setRurRateChecked,
+  setFieldValue,
+  rates,
+}) => {
+  const onCheckedChange = (
+    e: ChangeEvent<HTMLInputElement>,
+    type: keyof IRates,
+  ) => {
+    if (type === "usd") {
+      setUsdRateChecked(e.target.checked);
+    } else {
+      setRurRateChecked(e.target.checked);
+    }
+    if (!e.target.checked) {
+      setFieldValue(type, (rates as IRates)[type]);
+    }
+  };
 
   return (
     <>
@@ -13,17 +49,24 @@ export const Rates: FC = () => {
           id="rateCheckbox"
           type="checkbox"
           checked={usdRateChecked}
-          onChange={(e: any) => setUsdRateChecked(e.target.checked)}
+          onChange={(e: any) => onCheckedChange(e, "usd")}
         />
       </div>
-      <div className="w-30">
+      <div className="relative w-30">
         <label className="mb-2">USD rate</label>
-        <Field
-          disabled={!usdRateChecked}
-          name="usd"
-          type="number"
-          className="input input-bordered w-full"
-        />
+        <div className="relative">
+          <Field
+            disabled={!usdRateChecked}
+            name="usd"
+            type="number"
+            className="input input-bordered w-full"
+          />
+          {isRatesLoading && (
+            <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+              <Loader size="small" />
+            </span>
+          )}
+        </div>
       </div>
 
       <div className="flex flex-col items-end justify-center">
@@ -31,18 +74,25 @@ export const Rates: FC = () => {
           id="rateCheckbox"
           type="checkbox"
           checked={rurRateChecked}
-          onChange={(e: any) => setRurRateChecked(e.target.checked)}
+          onChange={(e: any) => onCheckedChange(e, "rur")}
         />
       </div>
 
-      <div className="w-30">
+      <div className=" w-30">
         <label className="mb-2">RUR rate</label>
-        <Field
-          disabled={!rurRateChecked}
-          name="rur"
-          type="number"
-          className="input input-bordered w-full"
-        />
+        <div className="relative">
+          <Field
+            disabled={!rurRateChecked}
+            name="rur"
+            type="number"
+            className="input input-bordered w-full"
+          />
+          {isRatesLoading && (
+            <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+              <Loader size="small" />
+            </span>
+          )}
+        </div>
       </div>
 
       <div className="flex flex-1 items-center justify-end text-info">

@@ -1,6 +1,6 @@
 "use client";
 
-import { FC, useMemo } from "react";
+import { FC, useEffect, useMemo, useState } from "react";
 import * as Yup from "yup";
 import { ErrorMessage, Field, Formik, Form } from "formik";
 import { Car } from "@/models/cars";
@@ -32,7 +32,7 @@ const validationSchema = Yup.object().shape({
       new Date().getFullYear(),
       `Year must be ${new Date().getFullYear()} or earlier`,
     ),
-  vinCode: Yup.string().required("Vin code is required"),
+  vinCode: Yup.string(),
   price: Yup.number().required("Price is required").positive(),
   usd: Yup.number().positive(),
   rur: Yup.number().positive(),
@@ -49,9 +49,14 @@ const validationSchema = Yup.object().shape({
 const EditForm: FC<Props> = ({ car, onCloseModal }) => {
   const addCarMutation = useAddCar();
   const editCarMutation = useEditCar();
+  const [rates, setRates] = useState<{ usd: number; rur: number } | null>(null);
+  const [isRatesLoading, setIsRatesLoading] = useState<boolean>(true);
+  const [usdRateChecked, setUsdRateChecked] = useState(false);
+  const [rurRateChecked, setRurRateChecked] = useState(false);
 
-  const initialValues: FormCarData = useMemo(
-    () => ({
+  const initialValues: FormCarData = useMemo(() => {
+    const ratesData = car?.rates || rates ? { ...car?.rates, ...rates } : {};
+    return {
       make: car?.make || "",
       model: car?.model || "",
       year: car?.year || "",
@@ -63,9 +68,32 @@ const EditForm: FC<Props> = ({ car, onCloseModal }) => {
       mileage: car?.mileage || "",
       engine: car?.engine || "",
       bodyType: car?.bodyType || "",
-    }),
-    [car],
-  );
+      ...ratesData,
+    };
+  }, [car, isRatesLoading, rates]);
+
+  useEffect(() => {
+    if (car?.rates) {
+      setUsdRateChecked(!!car.rates.usd);
+      setRurRateChecked(!!car.rates.rur);
+    }
+  }, [car?.rates]);
+
+  useEffect(() => {
+    const fetchRates = async () => {
+      try {
+        const response = await fetch("/api/extractRate");
+        const result = await response.json();
+        setRates(result);
+      } catch (error: any) {
+        console.error("Error fetching rates", error.message);
+      } finally {
+        setIsRatesLoading(false);
+      }
+    };
+
+    fetchRates();
+  }, []);
 
   const handleSubmit = async (values: FormCarData) => {
     try {
@@ -82,13 +110,13 @@ const EditForm: FC<Props> = ({ car, onCloseModal }) => {
       formData.append("mileage", values.mileage.toString());
       formData.append("engine", values.engine.toString());
       formData.append("bodyType", values.bodyType.toString());
-      formData.append(
-        "rates",
-        JSON.stringify({
-          usd: values.usd,
-          rur: values.rur,
-        }),
-      );
+
+      const usd = usdRateChecked ? { usd: values.usd } : null;
+      const rur = rurRateChecked ? { rur: values.rur } : null;
+
+      if (usd || rur) {
+        formData.append("rates", JSON.stringify({ ...usd, ...rur }));
+      }
 
       // Append images to formData
       values.images.forEach((file: File) => {
@@ -177,9 +205,7 @@ const EditForm: FC<Props> = ({ car, onCloseModal }) => {
                 </div>
 
                 <div className="form-control mb-4 flex-1">
-                  <label className="mb-2 after:text-red after:content-['*']">
-                    Vin code
-                  </label>
+                  <label className="mb-2">Vin code</label>
                   <Field name="vinCode" className="input input-bordered" />
                   <ErrorMessage
                     name="vinCode"
@@ -225,7 +251,15 @@ const EditForm: FC<Props> = ({ car, onCloseModal }) => {
 
               <div className="flex gap-x-10">
                 <div className="mb-4 flex flex-1 space-x-4">
-                  <Rates />
+                  <Rates
+                    isRatesLoading={isRatesLoading}
+                    usdRateChecked={usdRateChecked}
+                    setUsdRateChecked={setUsdRateChecked}
+                    rurRateChecked={rurRateChecked}
+                    setRurRateChecked={setRurRateChecked}
+                    setFieldValue={setFieldValue}
+                    rates={rates}
+                  />
                 </div>
 
                 <div className="form-control mb-4 flex-1">
