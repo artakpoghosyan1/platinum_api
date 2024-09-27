@@ -20,7 +20,7 @@ const SignIn: FC = () => {
 
     try {
       setIsLoading(true);
-      const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/auth`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_ADMIN_URL}/auth`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

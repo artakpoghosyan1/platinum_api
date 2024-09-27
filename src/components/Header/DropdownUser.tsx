@@ -7,7 +7,7 @@ const DropdownUser = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const handleLogout = async () => {
-    await fetch(`${process.env.NEXT_PUBLIC_URL}/logout`, {
+    await fetch(`${process.env.NEXT_PUBLIC_ADMIN_URL}/logout`, {
       method: "GET",
     });
 
