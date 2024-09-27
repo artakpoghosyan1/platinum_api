@@ -23,7 +23,7 @@ export const UserProvider: FC<UserProviderProps> = ({ children }) => {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const res = await fetch("/api/auth/check");
+      const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/auth/check`);
       const data = await res.json();
 
       if (data.isAuthenticated) {

@@ -1,16 +1,17 @@
 import { useState } from "react";
 import Link from "next/link";
 import ClickOutside from "@/components/ClickOutside";
+import { adminRoutes } from "@/config/adminRouts";
 
 const DropdownUser = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const handleLogout = async () => {
-    await fetch("/api/logout", {
+    await fetch(`${process.env.NEXT_PUBLIC_URL}/logout`, {
       method: "GET",
     });
 
-    window.location.href = "/signin";
+    window.location.href = adminRoutes.signin;
   };
 
   return (

@@ -3,27 +3,24 @@
 import { FC, FormEvent, useState } from "react";
 import ErrorAlert from "@/components/common/ErrorAlert";
 import Loader from "@/components/common/Loader";
-import { useUser } from "@/app/contexts/UserContext";
+import { useUser } from "@/contexts/UserContext";
 import { useRouter } from "next/navigation";
+import { adminRoutes } from "@/config/adminRouts";
 
 const SignIn: FC = () => {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { setUsername, username } = useUser();
+  const { setUsername } = useUser();
   const router = useRouter();
-
-  if (username) {
-    router.push("/dashboard");
-  }
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
     try {
       setIsLoading(true);
-      const res = await fetch("/api/auth", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/auth`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -36,13 +33,15 @@ const SignIn: FC = () => {
 
       if (res.ok) {
         console.log("successfully logged in");
-        window.history.replaceState(null, "", "/dashboard");
+        router.push(adminRoutes.dashboard);
       } else {
+        console.log(111);
         const { error } = await res.json();
         setError(error);
         setIsLoading(false);
       }
     } catch (error: any) {
+      console.log(222);
       setError(error.message);
       setIsLoading(false);
     }

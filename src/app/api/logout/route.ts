@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { serialize } from "cookie";
+import { adminRoutes } from "@/config/adminRouts";
 
 export async function GET(request: Request) {
   const cookie = serialize("token", "", {
@@ -9,7 +10,7 @@ export async function GET(request: Request) {
     path: "/", // Ensure the cookie is removed from all paths
   });
 
-  const url = new URL("/signin", request.url);
+  const url = new URL(adminRoutes.signin, request.url);
   const response = NextResponse.redirect(url);
   response.headers.set("Set-Cookie", cookie);
   return response;

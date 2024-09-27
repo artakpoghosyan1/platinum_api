@@ -1,54 +1,26 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
-// Define the allowed origin
-const allowedOrigin = "http://localhost:4321";
-
-// Helper function to set CORS headers
-function setCorsHeaders(response: NextResponse) {
-  response.headers.set("Access-Control-Allow-Origin", allowedOrigin);
-  response.headers.set(
-    "Access-Control-Allow-Methods",
-    "GET, POST, PUT, OPTIONS",
-  );
-  response.headers.set(
-    "Access-Control-Allow-Headers",
-    "Content-Type, Authorization",
-  );
-}
-
-// Handle preflight OPTIONS requests
-export async function OPTIONS() {
-  const response = new NextResponse(null, { status: 204 });
-  setCorsHeaders(response);
-  return response;
-}
-
 // API route to fetch the "About Us" content from the database
 export async function GET() {
   try {
     const pages = await prisma.pages.findFirst();
 
     if (!pages) {
-      const response = NextResponse.json(
+      return NextResponse.json(
         { error: "About Us content not found" },
         { status: 404 },
       );
-      setCorsHeaders(response);
-      return response;
     }
 
-    const response = NextResponse.json(pages, { status: 200 });
-    setCorsHeaders(response);
-    return response;
+    return NextResponse.json(pages, { status: 200 });
   } catch (error) {
     console.error("Error fetching About Us content:", error);
-    const response = NextResponse.json(
+
+    return NextResponse.json(
       { error: "Failed to fetch content" },
       { status: 500 },
     );
-    setCorsHeaders(response);
-    return response;
   }
 }
 
@@ -59,12 +31,10 @@ export async function POST(req: NextRequest) {
     const { about, phoneNumber } = await req.json();
 
     if (!about || !phoneNumber) {
-      const response = NextResponse.json(
+      return NextResponse.json(
         { error: "Content and phone number are required" },
         { status: 400 },
       );
-      setCorsHeaders(response);
-      return response;
     }
 
     // Check if the "About Us" content already exists
@@ -113,15 +83,13 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    setCorsHeaders(response);
     return response;
   } catch (error) {
     console.error("Error saving About Us content:", error);
-    const response = NextResponse.json(
+
+    return NextResponse.json(
       { error: "Failed to save content" },
       { status: 500 },
     );
-    setCorsHeaders(response);
-    return response;
   }
 }

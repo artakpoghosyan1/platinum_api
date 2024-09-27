@@ -1,8 +1,11 @@
 import { ServerCar } from "@/models/cars";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
+const url = process.env.NEXT_PUBLIC_URL;
+const urlAdmin = process.env.NEXT_PUBLIC_ADMIN_URL;
+
 async function getCars(): Promise<ServerCar[]> {
-  const res = await fetch("/cars");
+  const res = await fetch(`${url}/cars`);
   if (!res.ok) {
     throw new Error("Failed to fetch cars");
   }
@@ -10,7 +13,7 @@ async function getCars(): Promise<ServerCar[]> {
 }
 
 async function addCar(formData: FormData): Promise<any> {
-  const response = await fetch("/cars", {
+  const response = await fetch(`${url}/cars`, {
     method: "POST",
     body: formData,
   });
@@ -23,7 +26,7 @@ async function addCar(formData: FormData): Promise<any> {
 }
 
 const deleteImage = async (imageId: number) => {
-  const response = await fetch(`/images/${imageId}`, {
+  const response = await fetch(`${urlAdmin}/images/${imageId}`, {
     method: "DELETE",
   });
 
@@ -35,7 +38,7 @@ const deleteImage = async (imageId: number) => {
 };
 
 const deleteCar = async (carId: number) => {
-  const response = await fetch(`/cars/${carId}`, {
+  const response = await fetch(`${url}/cars/${carId}`, {
     method: "DELETE",
   });
 
@@ -47,7 +50,7 @@ const deleteCar = async (carId: number) => {
 };
 
 const updateCar = async (id: number, formData: FormData) => {
-  const response = await fetch(`/cars/${id}`, {
+  const response = await fetch(`${url}/cars/${id}`, {
     method: "PUT",
     body: formData,
   });
@@ -61,7 +64,7 @@ const updateCar = async (id: number, formData: FormData) => {
 
 const addAboutData = async (data: { about: string; phoneNumber: string }) => {
   try {
-    const response = await fetch("/about/api", {
+    const response = await fetch(`${url}/about`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -80,7 +83,7 @@ const addAboutData = async (data: { about: string; phoneNumber: string }) => {
 };
 
 async function getAboutData(): Promise<any> {
-  const res = await fetch("/about/api");
+  const res = await fetch(`${url}/about`);
 
   if (!res.ok) {
     throw new Error("Failed to fetch about data");

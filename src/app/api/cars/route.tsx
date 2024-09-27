@@ -1,22 +1,8 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { uploadImages } from "@/app/cars/uploadImages";
+import { uploadImages } from "@/app/api/cars/uploadImages";
 
 export const runtime = "nodejs";
-
-// Helper function to set CORS headers
-function setCorsHeaders(response: NextResponse) {
-  response.headers.set("Access-Control-Allow-Origin", "*"); // TODO: Artak handle cors
-  response.headers.set("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-  response.headers.set("Access-Control-Allow-Headers", "Content-Type");
-}
-
-// Handle preflight OPTIONS requests
-export async function OPTIONS() {
-  const response = NextResponse.json(null, { status: 204 });
-  setCorsHeaders(response);
-  return response;
-}
 
 export async function POST(request: Request) {
   try {
@@ -58,26 +44,17 @@ export async function POST(request: Request) {
     // Process and upload images
     await uploadImages(images, newCar.id);
 
-    const response = NextResponse.json({
+    return NextResponse.json({
       message: "Car added successfully",
       cars: newCar,
     });
-
-    // Set CORS headers
-    setCorsHeaders(response);
-
-    return response;
   } catch (error) {
     console.error("Error processing request:", error);
-    const response = NextResponse.json(
+
+    return NextResponse.json(
       { error: "Error processing request" },
       { status: 500 },
     );
-
-    // Set CORS headers
-    setCorsHeaders(response);
-
-    return response;
   }
 }
 
@@ -89,22 +66,10 @@ export async function GET() {
       },
     });
 
-    const response = NextResponse.json(cars);
-
-    // Set CORS headers
-    setCorsHeaders(response);
-
-    return response;
+    return NextResponse.json(cars);
   } catch (error) {
     console.error("Error fetching cars:", error);
-    const response = NextResponse.json(
-      { error: "Error fetching cars" },
-      { status: 500 },
-    );
 
-    // Set CORS headers
-    setCorsHeaders(response);
-
-    return response;
+    return NextResponse.json({ error: "Error fetching cars" }, { status: 500 });
   }
 }

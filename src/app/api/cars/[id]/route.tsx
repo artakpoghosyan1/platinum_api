@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { uploadImages } from "@/app/cars/uploadImages";
 import path from "path";
 import fs from "fs/promises";
+import { uploadImages } from "@/app/api/cars/uploadImages";
 
 // PUT request handler for updating a car by its ID
 export async function PUT(

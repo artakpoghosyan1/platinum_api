@@ -1,2 +1,0 @@
--- AlterTable
-ALTER TABLE `cars` MODIFY `year` SMALLINT UNSIGNED NOT NULL;

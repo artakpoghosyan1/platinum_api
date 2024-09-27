@@ -6,7 +6,7 @@ import "@/css/style.css";
 import React, { useEffect, useState } from "react";
 import Loader from "@/components/common/Loader";
 import ReactQueryProvider from "@/lib/ReactQueryProvider";
-import { UserProvider } from "@/app/contexts/UserContext";
+import { UserProvider } from "@/contexts/UserContext";
 
 export default function RootLayout({
   children,

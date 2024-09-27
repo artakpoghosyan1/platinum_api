@@ -13,7 +13,6 @@ export async function POST(request: Request) {
   if (username === "admin" && password === "password123") {
     const token = await new SignJWT({ username })
       .setProtectedHeader({ alg: "HS256" })
-      .setExpirationTime("1h")
       .sign(secret);
 
     // Set token in an HTTP-only cookie

@@ -84,7 +84,9 @@ const EditForm: FC<Props> = ({ car, onCloseModal }) => {
   useEffect(() => {
     const fetchRates = async () => {
       try {
-        const response = await fetch("/api/extractRate");
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_URL}/extractRate`,
+        );
         const result = await response.json();
         setRates(result);
       } catch (error: any) {
