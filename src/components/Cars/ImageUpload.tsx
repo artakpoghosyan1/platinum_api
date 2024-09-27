@@ -61,7 +61,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ images, setFieldValue }) => {
     <div>
       <label
         htmlFor="imageUpload"
-        className="inline-flex w-auto cursor-pointer items-center justify-center rounded-md border border-primary px-10 py-4 text-center font-medium text-primary hover:bg-opacity-90 lg:px-8 xl:px-10"
+        className="inline-flex w-auto cursor-pointer items-center justify-center rounded-md border border-primary px-10 py-4 text-center font-medium text-primary hover:bg-opacity-90 dark:border-white dark:text-white lg:px-8 xl:px-10"
       >
         Choose car images
       </label>

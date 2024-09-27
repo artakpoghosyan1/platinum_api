@@ -60,7 +60,7 @@ export const Rates: FC<Props> = ({
             disabled={!usdRateChecked}
             name="usd"
             type="number"
-            className="input input-bordered w-full"
+            className="input input-bordered w-full disabled:text-bodydark2 dark:bg-graydark"
           />
           {isRatesLoading && (
             <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
@@ -86,7 +86,7 @@ export const Rates: FC<Props> = ({
             disabled={!rurRateChecked}
             name="rur"
             type="number"
-            className="input input-bordered w-full"
+            className="input input-bordered w-full disabled:text-bodydark2 dark:bg-graydark"
           />
           {isRatesLoading && (
             <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">

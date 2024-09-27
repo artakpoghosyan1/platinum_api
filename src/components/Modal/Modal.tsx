@@ -26,9 +26,9 @@ export const Modal: FC<Props> = ({ children, onClose }) => {
   }, [onClose]);
 
   return (
-    <dialog id="my_modal_1" className="modal" ref={modalRef}>
+    <dialog id="my_modal_1" className="dark:bg-white-200 modal " ref={modalRef}>
       <ToastContainer />
-      <div className="modal-box relative w-11/12 max-w-5xl">
+      <div className="modal-box relative w-11/12 max-w-5xl dark:bg-black">
         <button className="absolute right-5 top-5" onClick={onClose}>
           <svg
             className="text-gray-800 h-6 w-6 dark:text-white"

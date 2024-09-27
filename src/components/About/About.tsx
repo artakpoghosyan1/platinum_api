@@ -38,7 +38,7 @@ const AboutForm: FC = () => {
   };
 
   return (
-    <div className="mx-auto my-10 bg-white p-6 shadow-md">
+    <div className="mx-auto my-10 bg-white p-6 shadow-md dark:bg-boxdark">
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
@@ -52,7 +52,7 @@ const AboutForm: FC = () => {
               <Field
                 as="textarea"
                 name="about"
-                className="textarea textarea-bordered h-67 w-full"
+                className="textarea textarea-bordered h-67 w-full dark:bg-graydark"
               />
               <ErrorMessage name="about" component="div" className="text-red" />
             </div>
@@ -61,7 +61,7 @@ const AboutForm: FC = () => {
               <label className="label">Phone Number</label>
               <Field
                 name="phoneNumber"
-                className="input input-bordered w-full"
+                className="input input-bordered w-full dark:bg-graydark"
                 placeholder="055000000"
               />
               <ErrorMessage

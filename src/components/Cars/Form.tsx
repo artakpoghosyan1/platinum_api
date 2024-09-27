@@ -169,7 +169,10 @@ const EditForm: FC<Props> = ({ car, onCloseModal }) => {
                   <label className="mb-2 after:text-red after:content-['*']">
                     Make
                   </label>
-                  <Field name="make" className="input input-bordered " />
+                  <Field
+                    name="make"
+                    className="input input-bordered dark:bg-graydark "
+                  />
                   <ErrorMessage
                     name="make"
                     component="div"
@@ -181,7 +184,10 @@ const EditForm: FC<Props> = ({ car, onCloseModal }) => {
                   <label className="mb-2 after:text-red after:content-['*']">
                     Model
                   </label>
-                  <Field name="model" className="input input-bordered" />
+                  <Field
+                    name="model"
+                    className="input input-bordered dark:bg-graydark"
+                  />
                   <ErrorMessage
                     name="model"
                     component="div"
@@ -196,7 +202,7 @@ const EditForm: FC<Props> = ({ car, onCloseModal }) => {
                   <Field
                     name="vinUrl"
                     type="text"
-                    className="input input-bordered"
+                    className="input input-bordered dark:bg-graydark"
                   />
                   <ErrorMessage
                     name="vinUrl"
@@ -207,7 +213,10 @@ const EditForm: FC<Props> = ({ car, onCloseModal }) => {
 
                 <div className="form-control mb-4 flex-1">
                   <label className="mb-2">Vin code</label>
-                  <Field name="vinCode" className="input input-bordered" />
+                  <Field
+                    name="vinCode"
+                    className="input input-bordered dark:bg-graydark"
+                  />
                   <ErrorMessage
                     name="vinCode"
                     component="div"
@@ -224,7 +233,7 @@ const EditForm: FC<Props> = ({ car, onCloseModal }) => {
                   <Field
                     name="year"
                     type="number"
-                    className="input input-bordered"
+                    className="input input-bordered dark:bg-graydark"
                   />
                   <ErrorMessage
                     name="year"
@@ -240,7 +249,7 @@ const EditForm: FC<Props> = ({ car, onCloseModal }) => {
                   <Field
                     name="price"
                     type="number"
-                    className="input input-bordered w-full"
+                    className="input input-bordered w-full dark:bg-graydark"
                   />
                   <ErrorMessage
                     name="price"
@@ -258,7 +267,7 @@ const EditForm: FC<Props> = ({ car, onCloseModal }) => {
                   <Field
                     name="mileage"
                     type="number"
-                    className="input input-bordered"
+                    className="input input-bordered dark:bg-graydark"
                   />
                   <ErrorMessage
                     name="mileage"
@@ -290,7 +299,7 @@ const EditForm: FC<Props> = ({ car, onCloseModal }) => {
                       name="engine"
                       value={values.engine}
                       onChange={handleChange}
-                      className="input input-bordered w-full"
+                      className="input input-bordered w-full dark:bg-graydark"
                     >
                       <option value="diesel">Diesel</option>
                       <option value="electric">Electric</option>
@@ -332,7 +341,7 @@ const EditForm: FC<Props> = ({ car, onCloseModal }) => {
                   <Field
                     name="bodyType"
                     type="text"
-                    className="input input-bordered"
+                    className="input input-bordered dark:bg-graydark"
                   />
                   <ErrorMessage
                     name="bodyType"
@@ -347,7 +356,10 @@ const EditForm: FC<Props> = ({ car, onCloseModal }) => {
                   <label className="mb-2 after:text-red after:content-['*']">
                     Color
                   </label>
-                  <Field name="color" className="input input-bordered" />
+                  <Field
+                    name="color"
+                    className="input input-bordered dark:bg-graydark"
+                  />
                   <ErrorMessage
                     name="color"
                     component="div"
@@ -360,7 +372,7 @@ const EditForm: FC<Props> = ({ car, onCloseModal }) => {
                   <Field
                     name="description"
                     as="textarea"
-                    className="input input-bordered"
+                    className="input input-bordered dark:bg-graydark"
                   />
                   <ErrorMessage
                     name="description"
