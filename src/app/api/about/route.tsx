@@ -25,7 +25,6 @@ export async function GET() {
 }
 
 // API route to handle the "About Us" form submission
-// API route to handle the "About Us" form submission
 export async function POST(req: NextRequest) {
   try {
     const { about, phoneNumber } = await req.json();
