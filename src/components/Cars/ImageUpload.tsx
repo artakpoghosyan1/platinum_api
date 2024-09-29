@@ -91,7 +91,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ images, setFieldValue }) => {
               onClick={(e) => handleDeleteImage(e, index, id)}
             >
               <svg
-                className="text-gray-800 dark:text-white"
+                className="text-gray-800 dark:text-black"
                 xmlns="http://www.w3.org/2000/svg"
                 width="17"
                 height="17"
