@@ -117,7 +117,7 @@ export const Rates: FC<Props> = ({
         style={{ maxWidth: "300px" }}
       >
         The rate values are got automatically based on the latest exchange rates
-        from Ameria bank's system. <br />
+        from system of Ameria bank. <br />
         <b>
           If you prefer to set each currency rate manually check the checkboxes.
         </b>
