@@ -20,6 +20,25 @@ interface FormCarData extends Omit<Car, "rates"> {
   rur?: number;
 }
 
+const engineOptions = {
+  diesel: {
+    label: "Diesel",
+    value: "diesel",
+  },
+  electric: {
+    label: "Electric",
+    value: "electric",
+  },
+  gas: {
+    label: "Gas",
+    value: "gas",
+  },
+  hybrid: {
+    label: "Hybrid",
+    value: "hybrid",
+  },
+};
+
 const validationSchema = Yup.object().shape({
   make: Yup.string().required("Make is required"),
   model: Yup.string().required("Model is required"),
@@ -68,7 +87,7 @@ const EditForm: FC<Props> = ({ car, onCloseModal }) => {
       color: car?.color || "",
       images: car?.images || [],
       mileage: car?.mileage || "",
-      engine: car?.engine || "",
+      engine: car?.engine || engineOptions.gas.value,
       bodyType: car?.bodyType || "",
       ...ratesData,
     };
@@ -301,10 +320,11 @@ const EditForm: FC<Props> = ({ car, onCloseModal }) => {
                       onChange={handleChange}
                       className="input input-bordered w-full dark:bg-graydark"
                     >
-                      <option value="diesel">Diesel</option>
-                      <option value="electric">Electric</option>
-                      <option value="gas">Gas</option>
-                      <option value="hybrid">Hybrid</option>
+                      {Object.values(engineOptions).map(({ value, label }) => (
+                        <option value={value} key={value}>
+                          {label}
+                        </option>
+                      ))}
                     </select>
 
                     <div className="pointer-events-none absolute right-3 top-1/2 flex -translate-y-1/2">
